@@ -88,22 +88,50 @@ class Report(SoftDeletableModel):
     R_CaseFail = models.IntegerField(verbose_name='失败数', null=True, blank=True)
     R_StartTime = models.CharField(max_length=200, verbose_name='任务起始时间', null=True, blank=True)
     R_EndTime = models.CharField(max_length=200, verbose_name='任务结束时间', null=True, blank=True)
-    R_Type  = models.IntegerField(default=2,choices=TASK_TYPE, verbose_name="任务类型")
+    R_Type = models.IntegerField(default=2, choices=TASK_TYPE, verbose_name="任务类型")
 
     class Meta:
         db_table = "report"
         verbose_name = "接口报告表"
         verbose_name_plural = verbose_name
 
+
 class ApiILog(SoftDeletableModel):
     caseId = models.IntegerField(verbose_name='用例id')
     caseUrl = models.TextField(verbose_name='接口url')
 
 
+class APIcaseinfo(SoftDeletableModel):
+    case_id = models.IntegerField(verbose_name="用例id")
+    case_name = models.CharField(max_length=1024, verbose_name="用例名称")
+    case_method = models.CharField(verbose_name="请求方式", max_length=32)
+    case_url = models.CharField(verbose_name="请求地址", max_length=1024)
+    case_headers = models.TextField(verbose_name="请求headers")
+    case_params = models.TextField(verbose_name="请求参数")
+    case_response = models.TextField(verbose_name="响应结果")
+    case_expect = models.TextField(verbose_name="期望结果")
+    case_stauts = models.CharField(verbose_name="case状态", max_length=12)
+    case_report = models.CharField(verbose_name="报告编号", max_length=200)
+    case_log = models.TextField()
+
+    class Meta:
+        db_table = "case_reportInfo"
+        verbose_name = "用例报告详情"
+        verbose_name_plural = verbose_name
 
 
+import mongoengine
 
 
-
-
-
+# class ApiLog(mongoengine.Document):
+#     log_caseID = mongoengine.IntField()
+#     log_reportID = mongoengine.StringField(max_length=256)
+#     log_caseUrl = mongoengine.StringField(max_length=1024)
+#     log_caseMethod = mongoengine.IntField()
+#     log_caseHeaders = mongoengine.StringField(max_length=2000)
+#     log_caseParams = mongoengine.StringField(max_length=3000)
+#     log_caseResponse = mongoengine.StringField(max_length=10000)
+#     log_caseCheckType = mongoengine.StringField(max_length=32)
+#     log_caseCheckText = mongoengine.StringField(max_length=2000)
+#     log_caseCheckExept = mongoengine.ListField()
+#     log_caseCheckResult = mongoengine.StringField(max_length=200)

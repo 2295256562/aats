@@ -90,8 +90,18 @@ DATABASES = {
         'HOST': '127.0.0.1',
         # 数据库的端口号
         'PORT': '3306'
+    },
+    'mongotest': {
+        'ENGINE': None,
     }
 }
+
+# 连接mangodb
+import mongoengine
+
+# 连接mongodb中数据库名称为mongotest5的数据库
+conn = mongoengine.connect("TT")
+
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
@@ -170,11 +180,11 @@ LOGGING = {
     'disable_existing_loggers': False,
     'formatters': {  # 格式化
         'simple': {
-            'format': '[%(asctime)s] %(filename)s %(lineno)d-->%(message)s',
+            'format': '[%(asctime)s %(levelname)s] %(message)s',
             'datefmt': '%Y-%m-%d %H:%M:%S'
         },
         'console': {
-            'format': '[%(asctime)s][%(levelname)s] %(pathname)s %(lineno)d -> %(message)s',
+            'format': '[%(asctime)s][%(levelname)s]  %(message)s',
             'datefmt': '%Y-%m-%d %H:%M:%S'
         }
     },

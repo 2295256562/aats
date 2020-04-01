@@ -1,5 +1,6 @@
-
+import datetime
 import os, django
+import time
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "aats.settings")
 from django.test import TestCase
@@ -9,6 +10,7 @@ import json
 # print(list)
 # c = (json.dumps(list))
 # print(json.loads(c))
-from product.models import Project
+# from product.models import Project
 
-print(Project.objects.get(pk=35))
+# print(dt.strftime('%Y-
+print (time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))

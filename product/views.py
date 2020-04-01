@@ -13,10 +13,10 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from myCelery.run_case.tasks import run_test
 from Users.custompage import CustomPagination
-from product.models import Project, Model, ApiCase, Headers, Report
+from product.models import Project, Model, ApiCase, Headers, Report, APIcaseinfo
 from product.serializer import ListProjectSerializer, AddProjectSerializer, SoureceProjectSer, AddModelSer, \
     ListModelSer, modelSerializer, addAPicaseSer, listApiCase, GETinfoSer, HeadersSer, HeadersInfoSer, reportinfoSer, \
-    timeTaskSer
+    timeTaskSer, HeadersfilterSer, caseReportInfoSer
 from utils.api.httpServer import httpservice
 from utils.baseViewSet import BaseViewSet
 from utils.baseresponse import BaseResponse
@@ -32,8 +32,7 @@ class ProjectListView(BaseViewSet):
     # filter_fields = ('project_name',)
     search_fields = ('project_name',)
 
-
-    """模块列表接口"""
+    """项目列表接口"""
 
     def get(self, request):
         return self.list(request)
@@ -93,9 +92,18 @@ class ProjectGetView(BaseViewSet):
 
 
 class HeadersView(BaseViewSet):
-    queryset = Headers.objects.all()
+    queryset = Headers.objects.all().order_by("-id")
     serializer_class = HeadersSer
     pagination_class = CustomPagination
+    # filter_fields = ('project', 'project_name')
+    # search_fields = ('project_id', 'project_name')
+
+
+class HeadersFilterView(BaseViewSet):
+    queryset = Headers.objects.all().order_by("-id")
+    serializer_class = HeadersfilterSer
+    pagination_class = CustomPagination
+    filter_fields = ('project', 'project_name')
 
 
 class HeadersinfoView(BaseViewSet):
@@ -144,7 +152,6 @@ class SendRequest(APIView):
             params = {x['key']: x['value'] for x in params}
 
         headers = {i['headerSetKey']: i['headersSetValue'] for i in data['headers']}
-        print(headers)
 
         if data['method'] == '1':
             if data['type'] == 1: Type = 'params'
@@ -232,14 +239,18 @@ class reportView(BaseViewSet):
     pagination_class = CustomPagination
 
 
+class CaseReportInfo(BaseViewSet):
+    queryset = APIcaseinfo.objects.all()
+    serializer_class = caseReportInfoSer
+    filter_fields = ('case_report',)
+
+
 class TestTask(APIView):
 
     # 发起测试任务
-
     def post(self, request):
         # 1. 获取用户的请求数据
         user_data = request.data
-        # print(user_data)
         logger.info(user_data)
         # 2. 判断用户传过来的id个数组长度是否大于1, 如果大于1就返回任务编号,任务由后台执行
         # if len((user_data['ids'])) > 1:
@@ -285,35 +296,40 @@ class timeTask(APIView):
 
     def post(self, request):
         data = request.data
-        print(data)
-        print(data['caseList'])
         env = {x['envName']: x['envAddres'] for x in data['envname']}
         new_env = {v: k for k, v in env.items()}
         envname = new_env[data['env']]
-
         projectname = Project.objects.get(pk=data['project'])
-
         TaskNo = get_pinyin_first_alpha("定时任务")
+
+        # 创建测试报告
         Report.objects.create(R_Number=TaskNo, R_Env=envname, R_CaseSum=len(data['caseList']),
                               create_user=request.user, R_CaseId=data['caseList'], R_project=projectname)
 
-
         if data['task'] == '每天':
             re = data['time'].split(':')
-            print(int(re[0]) - 8)
-            cron = CrontabSchedule.objects.create(minute=re[1], hour=int(re[0]) - 8, day_of_week='*', day_of_month='*',
-                                                  month_of_year='*')
+            try:
+                cron = CrontabSchedule.objects.get_or_create(minute=re[1], hour=int(re[0]) - 8, day_of_week='*',
+                                                             day_of_month='*',
+                                                             month_of_year='*')
+            except:
+                logger.error("任务时间已存在不可重复创建")
         elif data['task'] == '每周':
-            # print(data['time'])
             re = data['time'].split(':')
-            cron = CrontabSchedule.objects.create(minute=re[1], hour=int(re[0]) - 8, day_of_week=data['week'],
-                                                  day_of_month='*',
-                                                  month_of_year='*')
+            try:
+                cron = CrontabSchedule.objects.create(minute=re[1], hour=int(re[0]) - 8, day_of_week=data['week'],
+                                                      day_of_month='*',
+                                                      month_of_year='*')
+            except:
+                logger.error("任务时间已存在不可重复创建")
         else:
             re = data['time'].split(" ")
-            cron = CrontabSchedule.objects.create(minute=re[0], hour=int(re[1]) - 8, day_of_week=re[2],
-                                                  day_of_month=re[3],
-                                                  month_of_year=re[4])
+            try:
+                cron = CrontabSchedule.objects.create(minute=re[0], hour=int(re[1]) - 8, day_of_week=re[2],
+                                                      day_of_month=re[3],
+                                                      month_of_year=re[4])
+            except:
+                logger.error("任务时间已存在不可重复创建")
         try:
             args = [TaskNo, data['caseList'], data['project'], data['env']]
             PeriodicTask.objects.get_or_create(name=data["name"], task='run_test', crontab=cron,

@@ -1,2 +1,0 @@
-[2020-03-13 13:59:15] views.py 239-->{'env': 'http://127.0.0.1:8000/api/v1', 'envname': [{'envName': '开发环境', 'envAddres': 'http://127.0.0.1:8000/api/v1'}], 'ids': [4, 5], 'projectid': 35, 'project_name': '测试平台本地项目'}
-[2020-03-13 14:01:01] views.py 239-->{'env': 'http://127.0.0.1:8000/api/v1', 'envname': [{'envName': '开发环境', 'envAddres': 'http://127.0.0.1:8000/api/v1'}], 'ids': [4, 5], 'projectid': 35, 'project_name': '测试平台本地项目'}

@@ -1,12 +1,13 @@
 import json
+import logging
 import re
 
 import jsonpath as jsonpath
 import requests
 from celery.utils.log import get_task_logger
 
-log = get_task_logger(__name__)
-
+# log = get_task_logger(__name__)
+logger = logging.getLogger('mdjango')
 
 class httpservice:
 
@@ -28,13 +29,13 @@ class httpservice:
 
         # 响应断言
         if checkType == 'text_response':
-            log.info('预期值:%s ==== 实际值%s' %(json.loads(checkText, resp)))
+            logger.info('预期值:%s ==== 实际值%s' % (json.loads(checkText, resp)))
             if json.loads(checkText) == resp:
                 check = '成功'
-                log.info('校验通过')
+                logger.info('校验通过')
             else:
                 check = '失败'
-                log.info('校验失败')
+                logger.info('校验失败')
 
         # jsonpath 断言
         if checkType == 'json_response':
@@ -49,25 +50,29 @@ class httpservice:
                 # print(resp)
                 reslut = self.JsonPath(resp, i)
                 # print(type(reslut))
-                # print(reslut)
+                # print(type(reslut[0]))
                 if isinstance(reslut[0], str):
                     res = " ".join(reslut)
-                    # print(res)
+                    print(res)
                     if res == j:
-                        log.info('预期值:%s === 实际值%s' % (res, j))
+                        logger.info('预期值:%s === 实际值%s' % (res, j))
                         check = '成功'
-                        log.info('校验通过')
+                        logger.info('校验通过')
                     else:
                         check = '失败'
-                        log.info('校验失败')
+                        logger.info('校验失败')
                         return check
                 else:
-                    if reslut == j:
+                    tmp = (reslut[0])
+                    # print(type(eval(j)))
+                    if tmp == eval(j):
+                        logger.info('预期值:%s === 实际值%s' % (tmp, j))
                         check = '成功'
+                        logger.info('校验通过')
                     else:
                         check = '失败'
-                        return check
-
+                        logger.info('校验失败')
+                        # return check
         return check
 
     def request(self):
@@ -83,7 +88,8 @@ class httpservice:
         if self.method == '2':
             if self.type == 1:
                 headers = self.headers.update({'Content-Type': 'application/x-www-form-urlencoded'})
-                resp = requests.post(url=self.url, data=self.parameters, headers=headers)
+                print(self.headers)
+                resp = requests.post(url=self.url, data=self.parameters, headers=self.headers)
 
             if self.type == 2:
                 # print(json.loads(self.parameters))
@@ -152,20 +158,24 @@ class httpservice:
     def extract(string, dict):
         try:
             while re.search('\$\{(.*?)\}', string):
-                    key = re.search('\$\{(.*?)\}', string).group(0)
-                    value = re.search('\$\{(.*?)\}', string).group(1)
-                    n = value.split('.')
-                    # print(n)
-                    tmp = dict[0][n[0]]
-                    string = string.replace(key, str(tmp))
+                key = re.search('\$\{(.*?)\}', string).group(0)
+                value = re.search('\$\{(.*?)\}', string).group(1)
+                n = value.split('.')
+                tmp = dict[0]
+                for i in n:
+                    tmp = tmp[i]
+                string = string.replace(key, str(tmp))
         except:
             string = string
         return string
 
-dict =[{'token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJ1c2VybmFtZSI6ImFkbWluIiwiZXhwIjoxNTgzOTEzNTQ5LCJlbWFpbCI6IjIyOTUyNTY1NjJAcXEuY29tIn0.zHtZddZqij2OtShKsCUfYfUob5kmaO5H7w9SpP_oOoY', 'id': 1, 'username': 'admin'}]
 
+dict = [{'flag': True, 'msg': 'success', 'code': 0, 'data': {
+    'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjo0ODc4NzU4LCJleHAiOjE1ODU3OTk2MzQsImlhdCI6MTU4NTE5NDgzNH0.TR_R-WK_gxjVz1VUDgVYrFaVrPqKEeSlgCeZZm7zi7s',
+    'uid': 4878758}}]
 
 if __name__ == '__main__':
-    cc = {'Content-Type': 'application/json', 'Authorization': '${token}'}
+    cc = {'Content-Type': 'application/json', 'api-version': 'v1.2.0', 'request-source': 'web',
+          'authorization': '${data.token}'}
 
     print(httpservice.extract(str(cc), dict))
