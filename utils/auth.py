@@ -8,6 +8,7 @@ class JSONWebTokenAuthentication(BaseJSONWebTokenAuthentication):
         def authenticate(self, request):
             # 采用drf获取token的手段 - HTTP_AUTHORIZATION - Authorization
             token = get_authorization_header(request)
+
             if not token:
                 raise AuthenticationFailed('Authorization 字段是必须的')
             # 可以添加反扒措施：原功能是token有前缀

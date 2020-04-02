@@ -1,0 +1,122 @@
+[73427 140734755278272 2020-04-01 16:19:53 /Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/celery/utils/log.py:282] WARNING: /Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/celery/apps/worker.py:161: CDeprecationWarning: 
+Starting from version 3.2 Celery will refuse to accept pickle by default.
+
+The pickle serializer is a security concern as it may give attackers
+the ability to execute any command.  It's important to secure
+your broker from unauthorized access when using pickle, so we think
+that enabling pickle should require a deliberate action and not be
+the default choice.
+
+If you depend on pickle then you should set a setting to disable this
+warning and to be sure that everything will continue working
+when you upgrade to Celery 3.2::
+
+    CELERY_ACCEPT_CONTENT = ['pickle', 'json', 'msgpack', 'yaml']
+
+You must only enable the serializers that you will actually use.
+
+
+  warnings.warn(CDeprecationWarning(W_PICKLE_DEPRECATED))
+[73434 140734755278272 2020-04-01 16:19:53 /Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/celery/beat.py:468] INFO: beat: Starting...
+[73434 140734755278272 2020-04-01 16:19:53 /Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/djcelery/schedulers.py:214] INFO: Writing entries (0)...
+[73427 140734755278272 2020-04-01 16:19:54 /Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/celery/worker/consumer.py:526] INFO: Connected to redis://127.0.0.1:6379/15
+[73427 140734755278272 2020-04-01 16:19:54 /Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/celery/worker/consumer.py:614] INFO: mingle: searching for neighbors
+[73427 140734755278272 2020-04-01 16:19:55 /Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/celery/worker/consumer.py:632] INFO: mingle: all alone
+[73427 140734755278272 2020-04-01 16:19:55 /Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/celery/utils/log.py:282] WARNING: /Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/celery/fixups/django.py:265: UserWarning: Using settings.DEBUG leads to a memory leak, never use this setting in production environments!
+  warnings.warn('Using settings.DEBUG leads to a memory leak, never '
+[73427 140734755278272 2020-04-01 16:19:55 /Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/celery/utils/log.py:282] WARNING: celery@kuangxinmandeMacBook-Pro.local ready.
+[73427 140734755278272 2020-04-01 16:20:05 /Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/celery/worker/strategy.py:60] INFO: Received task: run_test[97b1c964-fa1c-452e-aa93-47924ddf32d7]
+[run_test 97b1c964-fa1c-452e-aa93-47924ddf32d7 73435 140734755278272 2020-04-01 16:20:05 /Users/kxm/PycharmProjects/aats/myCelery/run_case/tasks.py:48] INFO: 请求方式:2
+[run_test 97b1c964-fa1c-452e-aa93-47924ddf32d7 73435 140734755278272 2020-04-01 16:20:05 /Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/celery/utils/log.py:282] WARNING: {'Content-Type': 'application/x-www-form-urlencoded', 'api-version': 'v1.2.0', 'request-source': 'web', 'authorization': '${data.token}'}
+[run_test 97b1c964-fa1c-452e-aa93-47924ddf32d7 73435 140734755278272 2020-04-01 16:20:05 /Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/celery/utils/log.py:282] WARNING: {'Content-Type': 'application/x-www-form-urlencoded', 'api-version': 'v1.2.0', 'request-source': 'web', 'authorization': '${data.token}'}
+[run_test 97b1c964-fa1c-452e-aa93-47924ddf32d7 73435 140734755278272 2020-04-01 16:20:05 /Users/kxm/PycharmProjects/aats/myCelery/run_case/tasks.py:48] INFO: 请求方式:1
+[run_test 97b1c964-fa1c-452e-aa93-47924ddf32d7 73435 140734755278272 2020-04-01 16:20:05 /Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/celery/utils/log.py:282] WARNING: success
+[73427 140734755278272 2020-04-01 16:20:05 /Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/celery/worker/job.py:402] INFO: Task run_test[97b1c964-fa1c-452e-aa93-47924ddf32d7] succeeded in 0.4867070539621636s: '执行成功'
+[73434 140734755278272 2020-04-01 16:33:42 /Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/djcelery/schedulers.py:214] INFO: Writing entries (0)...
+[73434 140734755278272 2020-04-01 16:33:42 /Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/djcelery/schedulers.py:214] INFO: Writing entries (0)...
+[73434 140734755278272 2020-04-01 16:33:42 /Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/celery/utils/log.py:282] WARNING: Traceback (most recent call last):
+[73434 140734755278272 2020-04-01 16:33:42 /Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/celery/utils/log.py:282] WARNING: File "/Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/django/db/backends/mysql/base.py", line 257, in _set_autocommit
+    self.connection.autocommit(autocommit)
+[73434 140734755278272 2020-04-01 16:33:42 /Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/celery/utils/log.py:282] WARNING: File "/Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/pymysql/connections.py", line 387, in autocommit
+    self._send_autocommit_mode()
+[73434 140734755278272 2020-04-01 16:33:42 /Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/celery/utils/log.py:282] WARNING: File "/Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/pymysql/connections.py", line 404, in _send_autocommit_mode
+    self.escape(self.autocommit_mode))
+[73434 140734755278272 2020-04-01 16:33:42 /Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/celery/utils/log.py:282] WARNING: File "/Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/pymysql/connections.py", line 750, in _execute_command
+    raise err.InterfaceError("(0, '')")
+[73434 140734755278272 2020-04-01 16:33:42 /Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/celery/utils/log.py:282] WARNING: pymysql.err.InterfaceError: (0, '')
+[73434 140734755278272 2020-04-01 16:33:42 /Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/celery/utils/log.py:282] WARNING: The above exception was the direct cause of the following exception:
+[73434 140734755278272 2020-04-01 16:33:42 /Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/celery/utils/log.py:282] WARNING: Traceback (most recent call last):
+[73434 140734755278272 2020-04-01 16:33:42 /Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/celery/utils/log.py:282] WARNING: File "/Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/billiard/process.py", line 292, in _bootstrap
+    self.run()
+[73434 140734755278272 2020-04-01 16:33:42 /Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/celery/utils/log.py:282] WARNING: File "/Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/celery/beat.py", line 553, in run
+    self.service.start(embedded_process=True)
+[73434 140734755278272 2020-04-01 16:33:42 /Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/celery/utils/log.py:282] WARNING: File "/Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/celery/beat.py", line 490, in start
+    self.sync()
+[73434 140734755278272 2020-04-01 16:33:42 /Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/celery/utils/log.py:282] WARNING: File "/Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/celery/beat.py", line 493, in sync
+    self.scheduler.close()
+[73434 140734755278272 2020-04-01 16:33:42 /Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/celery/utils/log.py:282] WARNING: File "/Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/celery/beat.py", line 285, in close
+    self.sync()
+[73434 140734755278272 2020-04-01 16:33:42 /Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/celery/utils/log.py:282] WARNING: File "/Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/djcelery/schedulers.py", line 217, in sync
+    with commit_on_success():
+[73434 140734755278272 2020-04-01 16:33:42 /Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/celery/utils/log.py:282] WARNING: File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/contextlib.py", line 82, in __enter__
+    return next(self.gen)
+[73434 140734755278272 2020-04-01 16:33:42 /Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/celery/utils/log.py:282] WARNING: File "/Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/djcelery/db.py", line 56, in commit_on_success
+    with transaction.atomic(using):
+[73434 140734755278272 2020-04-01 16:33:42 /Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/celery/utils/log.py:282] WARNING: File "/Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/django/db/transaction.py", line 173, in __enter__
+    connection.set_autocommit(False, force_begin_transaction_with_broken_autocommit=True)
+[73434 140734755278272 2020-04-01 16:33:42 /Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/celery/utils/log.py:282] WARNING: File "/Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/django/db/backends/base/base.py", line 404, in set_autocommit
+    self._set_autocommit(autocommit)
+[73434 140734755278272 2020-04-01 16:33:42 /Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/celery/utils/log.py:282] WARNING: File "/Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/django/db/backends/mysql/base.py", line 257, in _set_autocommit
+    self.connection.autocommit(autocommit)
+[73434 140734755278272 2020-04-01 16:33:42 /Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/celery/utils/log.py:282] WARNING: File "/Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/django/db/utils.py", line 89, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+[73434 140734755278272 2020-04-01 16:33:42 /Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/celery/utils/log.py:282] WARNING: File "/Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/django/db/backends/mysql/base.py", line 257, in _set_autocommit
+    self.connection.autocommit(autocommit)
+[73434 140734755278272 2020-04-01 16:33:42 /Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/celery/utils/log.py:282] WARNING: File "/Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/pymysql/connections.py", line 387, in autocommit
+    self._send_autocommit_mode()
+[73434 140734755278272 2020-04-01 16:33:42 /Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/celery/utils/log.py:282] WARNING: File "/Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/pymysql/connections.py", line 404, in _send_autocommit_mode
+    self.escape(self.autocommit_mode))
+[73434 140734755278272 2020-04-01 16:33:42 /Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/celery/utils/log.py:282] WARNING: File "/Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/pymysql/connections.py", line 750, in _execute_command
+    raise err.InterfaceError("(0, '')")
+[73434 140734755278272 2020-04-01 16:33:42 /Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/celery/utils/log.py:282] WARNING: django.db.utils.InterfaceError: (0, '')
+[73434 140734755278272 2020-04-01 16:33:42 /Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/celery/utils/log.py:282] WARNING: During handling of the above exception, another exception occurred:
+[73434 140734755278272 2020-04-01 16:33:42 /Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/celery/utils/log.py:282] WARNING: Traceback (most recent call last):
+[73434 140734755278272 2020-04-01 16:33:42 /Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/celery/utils/log.py:282] WARNING: File "/Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/django/db/backends/mysql/base.py", line 257, in _set_autocommit
+    self.connection.autocommit(autocommit)
+[73434 140734755278272 2020-04-01 16:33:42 /Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/celery/utils/log.py:282] WARNING: File "/Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/pymysql/connections.py", line 387, in autocommit
+    self._send_autocommit_mode()
+[73434 140734755278272 2020-04-01 16:33:42 /Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/celery/utils/log.py:282] WARNING: File "/Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/pymysql/connections.py", line 404, in _send_autocommit_mode
+    self.escape(self.autocommit_mode))
+[73434 140734755278272 2020-04-01 16:33:42 /Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/celery/utils/log.py:282] WARNING: File "/Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/pymysql/connections.py", line 750, in _execute_command
+    raise err.InterfaceError("(0, '')")
+[73434 140734755278272 2020-04-01 16:33:42 /Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/celery/utils/log.py:282] WARNING: pymysql.err.InterfaceError: (0, '')
+[73434 140734755278272 2020-04-01 16:33:42 /Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/celery/utils/log.py:282] WARNING: The above exception was the direct cause of the following exception:
+[73434 140734755278272 2020-04-01 16:33:42 /Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/celery/utils/log.py:282] WARNING: Traceback (most recent call last):
+[73434 140734755278272 2020-04-01 16:33:42 /Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/celery/utils/log.py:282] WARNING: File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/multiprocessing/util.py", line 254, in _run_finalizers
+    finalizer()
+[73434 140734755278272 2020-04-01 16:33:42 /Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/celery/utils/log.py:282] WARNING: File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/multiprocessing/util.py", line 186, in __call__
+    res = self._callback(*self._args, **self._kwargs)
+[73434 140734755278272 2020-04-01 16:33:42 /Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/celery/utils/log.py:282] WARNING: File "/Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/djcelery/schedulers.py", line 217, in sync
+    with commit_on_success():
+[73434 140734755278272 2020-04-01 16:33:42 /Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/celery/utils/log.py:282] WARNING: File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/contextlib.py", line 82, in __enter__
+    return next(self.gen)
+[73434 140734755278272 2020-04-01 16:33:42 /Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/celery/utils/log.py:282] WARNING: File "/Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/djcelery/db.py", line 56, in commit_on_success
+    with transaction.atomic(using):
+[73434 140734755278272 2020-04-01 16:33:42 /Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/celery/utils/log.py:282] WARNING: File "/Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/django/db/transaction.py", line 173, in __enter__
+    connection.set_autocommit(False, force_begin_transaction_with_broken_autocommit=True)
+[73434 140734755278272 2020-04-01 16:33:42 /Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/celery/utils/log.py:282] WARNING: File "/Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/django/db/backends/base/base.py", line 404, in set_autocommit
+    self._set_autocommit(autocommit)
+[73434 140734755278272 2020-04-01 16:33:42 /Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/celery/utils/log.py:282] WARNING: File "/Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/django/db/backends/mysql/base.py", line 257, in _set_autocommit
+    self.connection.autocommit(autocommit)
+[73434 140734755278272 2020-04-01 16:33:42 /Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/celery/utils/log.py:282] WARNING: File "/Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/django/db/utils.py", line 89, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+[73434 140734755278272 2020-04-01 16:33:42 /Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/celery/utils/log.py:282] WARNING: File "/Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/django/db/backends/mysql/base.py", line 257, in _set_autocommit
+    self.connection.autocommit(autocommit)
+[73434 140734755278272 2020-04-01 16:33:42 /Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/celery/utils/log.py:282] WARNING: File "/Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/pymysql/connections.py", line 387, in autocommit
+    self._send_autocommit_mode()
+[73434 140734755278272 2020-04-01 16:33:42 /Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/celery/utils/log.py:282] WARNING: File "/Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/pymysql/connections.py", line 404, in _send_autocommit_mode
+    self.escape(self.autocommit_mode))
+[73434 140734755278272 2020-04-01 16:33:42 /Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/celery/utils/log.py:282] WARNING: File "/Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/pymysql/connections.py", line 750, in _execute_command
+    raise err.InterfaceError("(0, '')")
+[73434 140734755278272 2020-04-01 16:33:42 /Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/celery/utils/log.py:282] WARNING: django.db.utils.InterfaceError: (0, '')
+[73427 140734755278272 2020-04-01 16:33:44 /Users/kxm/PycharmProjects/ttas/venv/lib/python3.6/site-packages/celery/beat.py:497] INFO: beat: Shutting down...

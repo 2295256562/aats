@@ -251,7 +251,7 @@ class TestTask(APIView):
     def post(self, request):
         # 1. 获取用户的请求数据
         user_data = request.data
-        logger.info(user_data)
+        # logger.info(user_data)
         # 2. 判断用户传过来的id个数组长度是否大于1, 如果大于1就返回任务编号,任务由后台执行
         # if len((user_data['ids'])) > 1:
         env = {x['envName']: x['envAddres'] for x in user_data['envname']}

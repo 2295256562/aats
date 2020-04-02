@@ -12,7 +12,11 @@ from product.models import *
 from utils.api.httpServer import httpservice
 
 # logger = get_task_loggerger(__name__)
-logger = logging.getLogger('mdjango')
+# logger = logging.getLogger('mdjango')
+from utils.log import Logger
+
+
+
 
 @app.task(name="run_test")
 def run_test(TaskNo, ids, projectid, address):
@@ -42,20 +46,21 @@ def run_test(TaskNo, ids, projectid, address):
         # 执行测试用例
         # print(data)
         # 替换变量
-        logger.info('用例ID:%d' % i)
+        logger = Logger('all.log', level='info')
+        logger.logger.info('用例ID:%d' % i)
         sheaders = str(headersdict)
         headersdict = httpservice.extract(sheaders, data)
-        logger.info('请求方式:%s' % obj['method'])
-        logger.info('请求url:%s' % address + obj['url'])
-        logger.info('请求headers:%s' % headersdict)
-        logger.info('请求参数:%s' % params)
+        logger.logger.info('请求方式:%s' % obj['method'])
+        logger.logger.info('请求url:%s' % address + obj['url'])
+        logger.logger.info('请求headers:%s' % headersdict)
+        logger.logger.info('请求参数:%s' % params)
 
         resp = httpservice(obj['method'], address + obj['url'], obj['type'], params, ast.literal_eval(headersdict))
         respnonse = resp.request()
         if respnonse.status_code == 200:
-            logger.info('响应结果:%s' % respnonse.json())
-            logger.info('校验方式:%s' % obj['checkType'])
-            logger.info('校验值%s:' % obj['checkText'])
+            logger.logger.info('响应结果:%s' % respnonse.json())
+            logger.logger.info('校验方式:%s' % obj['checkType'])
+            logger.logger.info('校验值%s:' % obj['checkText'])
             check = resp.checkRequest(obj['checkType'], json.loads(obj['checkText']))
             # case报告详情表中插入数据
             if check == '成功':
@@ -67,15 +72,18 @@ def run_test(TaskNo, ids, projectid, address):
             c_fail += 1
             check = "失败"
 
-        templates = """[ID]: {} \n[接口]: {}\n[校验方式]: {}\n[校验属性]: {}\n[校验结果]: {}""".format(i, address + obj['url'], obj['checkType'], obj['checkText'], check)
+        # templates = """[ID]: {} \n[接口]: {}\n[校验方式]: {}\n[校验属性]: {}\n[校验结果]: {}""".format(i, address + obj['url'], obj['checkType'], obj['checkText'], check)
 
+        with open('all.log', 'r') as f:
+            tmp = f.read()
+        print(tmp)
         # checkStauts = respnonse.status_code != 200 && check == '失败'
         APIcaseinfo.objects.create(case_id=i, case_name=obj['case_name'], case_method=obj['method'],
                                    case_url=address + obj['url'],
                                    case_headers=headersdict,
                                    case_params=params, case_response=respnonse.json(), case_expect=obj['checkText'],
                                    case_stauts=check,
-                                   case_report=TaskNo, case_log=templates)
+                                   case_report=TaskNo, case_log=tmp)
 
         # 匹配到$符然后转换
         data.clear()

@@ -15,6 +15,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, re_path, include
+
+from Users.views import RegUserView
 from product.views import ProjectListView, ProjectAddView, ProjectGetView, sourceListView, AddModelView, ListModel, \
     SendRequest, projectgetModel, addApicase, ListApiCase, GETCaseInfo, TestTask, HeadersView, HeadersinfoView, \
     reportView, timeTask, TimeTaskList, listCase, HeadersFilterView, CaseReportInfo
@@ -23,13 +25,20 @@ from rest_framework_jwt.views import obtain_jwt_token
 urlpatterns = [
     path('admin/', admin.site.urls),
     re_path("api_auth", include("rest_framework.urls")),
+
+    # 用户
     path('api/v1/login/', obtain_jwt_token),
+    path('api/v1/reg/', RegUserView.as_view({'post': 'create'})),
+
+
+    # 项目
     path('api/v1/add_project/', ProjectAddView.as_view()),
     path('api/v1/project_list/', ProjectListView.as_view({'get': 'list'})),
     re_path('api/v1/u_project/(?P<pk>\d+)/', ProjectListView.as_view({'put': 'update'})),
     re_path('api/v1/project_info/(?P<pk>\d+)/', ProjectGetView.as_view({'get': 'retrieve'})),
     re_path('api/v1/del/(?P<pk>\d+)/', ProjectListView.as_view({'delete': 'destroy'})),
 
+    # 模块
     re_path('api/v1/ListProject', sourceListView.as_view()),
     re_path('api/v1/AddModel', AddModelView.as_view({'post': 'create'})),
     re_path('api/v1/modelList', ListModel.as_view({'get': 'list'})),

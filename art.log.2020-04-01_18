@@ -1,0 +1,25 @@
+[2020-04-02 09:24:40 INFO] 用例ID:7
+[2020-04-02 09:24:40 INFO] 请求方式:2
+[2020-04-02 09:24:40 INFO] 请求url:http://api.dlab.com/app/user/login/v2
+[2020-04-02 09:24:40 INFO] 请求headers:{'Content-Type': 'application/json', 'api-version': 'v1.2.0', 'request-source': 'web', 'authorization': '${data.token}'}
+[2020-04-02 09:24:40 INFO] 请求参数:{'mobile': '17671105406', 'password': 'yuanman99'}
+[2020-04-02 09:24:41 INFO] 响应结果:{'flag': True, 'msg': 'success', 'code': 0, 'data': {'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjo0ODc4NzU4LCJleHAiOjE1ODYzOTU0ODEsImlhdCI6MTU4NTc5MDY4MX0.FWIcxDJ8Iu_AtAxIsyyPrwIpQ5u16x_loh1vbnLcYj4', 'uid': 4878758}}
+[2020-04-02 09:24:41 INFO] 校验方式:json_response
+[2020-04-02 09:24:41 INFO] 校验值[{"key": "$.code", "value": "0", "initiate": true}]:
+[2020-04-02 09:24:41 INFO] 预期值:0 === 实际值0
+[2020-04-02 09:24:41 INFO] 校验通过
+[2020-04-02 09:24:41 INFO] 用例ID:8
+[2020-04-02 09:24:41 INFO] 请求方式:1
+[2020-04-02 09:24:41 INFO] 请求url:http://api.dlab.com/app/user/introinfo
+[2020-04-02 09:24:41 INFO] 请求headers:{'Content-Type': 'application/json', 'api-version': 'v1.2.0', 'request-source': 'web', 'authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjo0ODc4NzU4LCJleHAiOjE1ODYzOTU0ODEsImlhdCI6MTU4NTc5MDY4MX0.FWIcxDJ8Iu_AtAxIsyyPrwIpQ5u16x_loh1vbnLcYj4'}
+[2020-04-02 09:24:41 INFO] 请求参数:{'': ''}
+[2020-04-02 09:24:41 INFO] 响应结果:{'flag': True, 'msg': 'success', 'code': 0, 'data': {'id': 4878758, 'name': '176****5406', 'mobile': '17671105406', 'passwd': '', 'sex': 2, 'ison': '', 'email': '', 'avator': '', 'logip': '', 'logtime': 0, 'remember_token': '', 'created_at': 0, 'updated_at': 0, 'deleted_at': 0, 'isuse': 0, 'birthday': 0, 'unionid': ''}}
+[2020-04-02 09:24:41 INFO] 校验方式:json_response
+[2020-04-02 09:24:41 INFO] 校验值[{"key": "$.code", "value": "0", "initiate": true}, {"key": "$.msg", "value": "success", "initiate": true}]:
+[2020-04-02 09:24:41 INFO] 预期值:0 === 实际值0
+[2020-04-02 09:24:41 INFO] 校验通过
+[2020-04-02 09:24:41 INFO] 预期值:success === 实际值success
+[2020-04-02 09:24:41 INFO] 校验通过
+[2020-04-02 09:25:12 INFO] {'env': 'http://api.dlab.com', 'envname': [{'envName': '测试环境', 'envAddres': 'http://api.dlab.com'}, {'envName': '预发布环境', 'envAddres': 'https://api.pre.daddylab.com'}], 'ids': [7, 8], 'projectid': 39, 'project_name': '电商H5'}
+[2020-04-02 09:25:25 INFO] {'env': 'http://api.dlab.com', 'envname': [{'envName': '测试环境', 'envAddres': 'http://api.dlab.com'}, {'envName': '预发布环境', 'envAddres': 'https://api.pre.daddylab.com'}], 'ids': [7, 8], 'projectid': 39, 'project_name': '电商H5'}
+[2020-04-02 09:26:01 INFO] {'env': 'http://api.dlab.com', 'envname': [{'envName': '测试环境', 'envAddres': 'http://api.dlab.com'}, {'envName': '预发布环境', 'envAddres': 'https://api.pre.daddylab.com'}], 'ids': [7, 8], 'projectid': 39, 'project_name': '电商H5'}

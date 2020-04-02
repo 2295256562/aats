@@ -194,7 +194,6 @@ class caseReportInfoSer(serializers.ModelSerializer):
         return data
 
 
-
 from djcelery.models import CrontabSchedule, PeriodicTask
 
 
