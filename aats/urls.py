@@ -15,11 +15,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, re_path, include
+from django.views.static import serve
 
 from Users.views import RegUserView
+from aats import settings
 from product.views import ProjectListView, ProjectAddView, ProjectGetView, sourceListView, AddModelView, ListModel, \
     SendRequest, projectgetModel, addApicase, ListApiCase, GETCaseInfo, TestTask, HeadersView, HeadersinfoView, \
-    reportView, timeTask, TimeTaskList, listCase, HeadersFilterView, CaseReportInfo
+    reportView, timeTask, TimeTaskList, listCase, HeadersFilterView, CaseReportInfo, statisticseveryday
 from rest_framework_jwt.views import obtain_jwt_token
 
 urlpatterns = [
@@ -29,7 +31,8 @@ urlpatterns = [
     # 用户
     path('api/v1/login/', obtain_jwt_token),
     path('api/v1/reg/', RegUserView.as_view({'post': 'create'})),
-
+    path('api/v1/count/', statisticseveryday.as_view({'get': 'list'})),
+    re_path('media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
 
     # 项目
     path('api/v1/add_project/', ProjectAddView.as_view()),

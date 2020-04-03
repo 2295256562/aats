@@ -220,3 +220,13 @@ class timeTaskSer(serializers.ModelSerializer):
         data['crontab']['hour'] = int(data['crontab']['hour']) + 8
         # 返回处理之后的数据
         return data
+
+
+class statisticseverydaySer(serializers.ModelSerializer):
+    create_user = serializers.HiddenField(
+        default=serializers.CurrentUserDefault()
+    )
+
+    class Meta:
+        model = ApiCase
+        fields = '__all__'

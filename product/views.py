@@ -2,10 +2,12 @@ import json
 import logging
 from json import dumps
 
+from django.db.models import Count
 from django.http import HttpResponse
 from django.shortcuts import render
 
 # Create your views here.
+from django.utils.datetime_safe import strftime
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
 from rest_framework.pagination import PageNumberPagination
@@ -16,7 +18,7 @@ from Users.custompage import CustomPagination
 from product.models import Project, Model, ApiCase, Headers, Report, APIcaseinfo
 from product.serializer import ListProjectSerializer, AddProjectSerializer, SoureceProjectSer, AddModelSer, \
     ListModelSer, modelSerializer, addAPicaseSer, listApiCase, GETinfoSer, HeadersSer, HeadersInfoSer, reportinfoSer, \
-    timeTaskSer, HeadersfilterSer, caseReportInfoSer
+    timeTaskSer, HeadersfilterSer, caseReportInfoSer, statisticseverydaySer
 from utils.api.httpServer import httpservice
 from utils.baseViewSet import BaseViewSet
 from utils.baseresponse import BaseResponse
@@ -343,3 +345,11 @@ class TimeTaskList(BaseViewSet):
     queryset = PeriodicTask.objects.all().order_by('-id')
     serializer_class = timeTaskSer
     pagination_class = CustomPagination
+
+
+class statisticseveryday(BaseViewSet):
+    queryset = ApiCase.objects.extra(select={"create_time": "DATE_FORMAT(create_time, '%%Y-%%m-%%d')"}).values(
+        "create_time").annotate(count=Count("id")).order_by()
+
+
+    serializer_class = statisticseverydaySer

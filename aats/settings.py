@@ -224,3 +224,9 @@ CELERYBEAT_SCHEDULER = "djcelery.schedulers.DatabaseScheduler"
 # CELERY_RESULT_BACKEND = 'djcelery.backends.database:DatabaseBackend'
 # from djcelery.schedulers import DatabaseScheduler
 # CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler' # 定时任务调度器
+
+
+
+# 图片设置
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
