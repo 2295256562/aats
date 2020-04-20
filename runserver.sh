@@ -16,8 +16,6 @@ then
 fi
 
 # 定义一个函数
-$1="/var/lib/jenkins/workspace/test-hd"
-$2=8000
 run_temp_server(){
     project_dir=$1 # 传到函数的第一个参数：项目绝对路径
     runport=$2 # 第二个参数 端口
