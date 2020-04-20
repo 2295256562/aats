@@ -162,9 +162,9 @@ REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
 
     # 异常返回
-    # 'EXCEPTION_HANDLER': (
-    #     'utils.custom_exception.custom_exception_handler'
-    # )
+    'EXCEPTION_HANDLER': (
+        'utils.custom_exception.custom_exception_handler'
+    )
 }
 
 import datetime
@@ -172,7 +172,7 @@ import datetime
 JWT_AUTH = {
     'JWT_EXPIRATION_DELTA': datetime.timedelta(days=1),
     'JWT_RESPONSE_PAYLOAD_HANDLER': 'Users.utils.jwt_response_payload_handler',  # 后面跟着你视图里定义函数
-    # 'JWT_RESPONSE_PAYLOAD_ERROR_HANDLER': 'utils.jwt_response.jwt_response_payload_error_handler',
+    'JWT_RESPONSE_PAYLOAD_ERROR_HANDLER': 'utils.jwt_response.jwt_response_payload_error_handler',
 }
 
 LOGGING = {

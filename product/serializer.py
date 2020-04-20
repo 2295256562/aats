@@ -191,6 +191,8 @@ class caseReportInfoSer(serializers.ModelSerializer):
         data['case_headers'] = eval(data['case_headers'])
         data['case_params'] = eval(data['case_params'])
         data['case_response'] = eval(data['case_response'])
+        data['case_log'] = data['case_log'].replace('\n', '\n').replace('\r', '')
+        print(data['case_log'])
         return data
 
 
@@ -207,8 +209,9 @@ class timeTaskSer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
+        print(data)
         data['args'] = json.loads(data['args'])
-        print(type(data['args'][2]))
+        print((data['args'][2]))
         project = Project.objects.get(pk=data['args'][2])
         print(project.project_address)
         env = {x['envName']: x['envAddres'] for x in eval(project.project_address)}

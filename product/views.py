@@ -347,9 +347,28 @@ class TimeTaskList(BaseViewSet):
     pagination_class = CustomPagination
 
 
-class statisticseveryday(BaseViewSet):
-    queryset = ApiCase.objects.extra(select={"create_time": "DATE_FORMAT(create_time, '%%Y-%%m-%%d')"}).values(
-        "create_time").annotate(count=Count("id")).order_by()
+class statisticseveryday(APIView):
 
+    def get(self, request):
+        # 最近新增case
+        RECENTLYADDCASE = ApiCase.objects.extra(
+            select={"create_time": "DATE_FORMAT(create_time, '%%Y-%%m-%%d')"}).values(
+            "create_time").annotate(count=Count("id")).order_by()[:30]
 
-    serializer_class = statisticseverydaySer
+        # 用例总数
+        CASESUM = ApiCase.objects.count()
+
+        # 项目总数
+        PROJECTSUM = Project.objects.count()
+
+        # 定时任务总数
+        TimerTask = PeriodicTask.objects.count()
+
+        obj = {
+            "RECENTLYADDCASE": RECENTLYADDCASE,
+            "CASESUM": CASESUM,
+            "PROJECTSUM": PROJECTSUM,
+            "TimerTask": TimerTask
+        }
+
+        return Response({"code": "000000", "message": "成功", "data": obj})

@@ -31,7 +31,7 @@ urlpatterns = [
     # 用户
     path('api/v1/login/', obtain_jwt_token),
     path('api/v1/reg/', RegUserView.as_view({'post': 'create'})),
-    path('api/v1/count/', statisticseveryday.as_view({'get': 'list'})),
+    path('api/v1/count/', statisticseveryday.as_view()),
     re_path('media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
 
     # 项目
