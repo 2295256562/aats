@@ -82,20 +82,7 @@ AUTH_USER_MODEL = 'Users.User'
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 ENV_PROFILE = os.getenv("ENV")
 
-if ENV_PROFILE == "pro":
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'NAME': 'TT',
-            'USER': 'root',
-            'PASSWORD': 'yuan@MAN1023',
-            'HOST': '172.16.162.115',
-            # 数据库的端口号
-            'PORT': '3306'
-        },
-    }
-    DEBUG = False
-else:
+if ENV_PROFILE == "env":
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
@@ -107,25 +94,6 @@ else:
             'PORT': '3306'
         },
     }
-    DEBUG = True
-
-# # 连接mangodb
-# import mongoengine
-#
-# # 连接mongodb中数据库名称为mongotest5的数据库
-# conn = mongoengine.connect("TT")
-if ENV_PROFILE == "pro":
-    CACHES = {
-        "default": {
-            "BACKEND": "django_redis.cache.RedisCache",
-            "LOCATION": "redis://172.16.162.115/0",
-            "OPTIONS": {
-                "CLIENT_CLASS": "django_redis.client.DefaultClient",
-                "PICKLE_VERSION": -1
-            }
-        }
-    }
-else:
     CACHES = {
         "default": {
             "BACKEND": "django_redis.cache.RedisCache",
@@ -136,6 +104,40 @@ else:
             }
         }
     }
+    DEBUG = True
+
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'TT',
+            'USER': 'root',
+            'PASSWORD': 'yuan@MAN1023',
+            'HOST': '172.16.162.115',
+            # 数据库的端口号
+            'PORT': '3306'
+        },
+    }
+
+    CACHES = {
+        "default": {
+            "BACKEND": "django_redis.cache.RedisCache",
+            "LOCATION": "redis://172.16.162.115/0",
+            "OPTIONS": {
+                "CLIENT_CLASS": "django_redis.client.DefaultClient",
+                "PICKLE_VERSION": -1
+            }
+        }
+    }
+    DEBUG = False
+
+# # 连接mangodb
+# import mongoengine
+#
+# # 连接mongodb中数据库名称为mongotest5的数据库
+# conn = mongoengine.connect("TT")
+
+
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
 

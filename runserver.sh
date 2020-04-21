@@ -40,7 +40,7 @@ run_temp_server(){
 		# 守护进程方式 启动celery
 		# python3 manage.py celery multi start w1 -A QAPlatform  --loglevel=info
 		# 启动项目 "&"表示后台运行
-		ENV=pro python3 manage.py runserver 0.0.0.0:$runport &
+		python3 manage.py runserver 0.0.0.0:$runport &
 		echo "启动成功"
     fi
 }
