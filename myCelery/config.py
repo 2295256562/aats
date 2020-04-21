@@ -5,10 +5,10 @@ from celery.schedules import crontab
 
 djcelery.setup_loader()
 #  任务队列的连接地址
-BROKER_URL = 'redis://127.0.0.1:6379/15'
+BROKER_URL = 'redis://47.98.224.226:6379/15'
 
 # 结果队列的地址
-CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379/14'
+CELERY_RESULT_BACKEND = 'redis://47.98.224.226:6379/14'
 
 # 结果序列化方案
 CELERY_RESULT_SERIALIZER = 'json'
