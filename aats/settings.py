@@ -112,8 +112,8 @@ else:
             'ENGINE': 'django.db.backends.mysql',
             'NAME': 'TT',
             'USER': 'root',
-            'PASSWORD': 'yuan@MAN1023',
-            'HOST': '172.16.162.115',
+            'PASSWORD': 'yuan@KXM1023',
+            'HOST': '47.98.224.226',
             # 数据库的端口号
             'PORT': '3306'
         },
@@ -122,7 +122,7 @@ else:
     CACHES = {
         "default": {
             "BACKEND": "django_redis.cache.RedisCache",
-            "LOCATION": "redis://172.16.162.115/0",
+            "LOCATION": "redis://47.98.224.226/0",
             "OPTIONS": {
                 "CLIENT_CLASS": "django_redis.client.DefaultClient",
                 "PICKLE_VERSION": -1
