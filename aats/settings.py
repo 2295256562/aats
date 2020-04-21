@@ -24,7 +24,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'r@_o-q0fw)_&k#i2)6jd9-qjvvj^0tvi6%*2!8ny1#mo)wlyo-'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+
 
 ALLOWED_HOSTS = []
 
@@ -80,39 +80,62 @@ AUTH_USER_MODEL = 'Users.User'
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
+ENV_PROFILE = os.getenv("ENV")
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'TT',
-        'USER': 'root',
-        'PASSWORD': '123456',
-        'HOST': '127.0.0.1',
-        # 数据库的端口号
-        'PORT': '3306'
-    },
-    'mongotest': {
-        'ENGINE': None,
+if ENV_PROFILE == "pro":
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'TT',
+            'USER': 'root',
+            'PASSWORD': 'yuan@MAN1023',
+            'HOST': '172.16.162.115',
+            # 数据库的端口号
+            'PORT': '3306'
+        },
     }
-}
+    DEBUG = False
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'TT',
+            'USER': 'root',
+            'PASSWORD': '123456',
+            'HOST': '127.0.0.1',
+            # 数据库的端口号
+            'PORT': '3306'
+        },
+    }
+    DEBUG = True
 
-# 连接mangodb
-import mongoengine
-
-# 连接mongodb中数据库名称为mongotest5的数据库
-conn = mongoengine.connect("TT")
-
-CACHES = {
-    "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379/0",
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient",
-            "PICKLE_VERSION": -1
+# # 连接mangodb
+# import mongoengine
+#
+# # 连接mongodb中数据库名称为mongotest5的数据库
+# conn = mongoengine.connect("TT")
+if ENV_PROFILE == "pro":
+    CACHES = {
+        "default": {
+            "BACKEND": "django_redis.cache.RedisCache",
+            "LOCATION": "redis://172.16.162.115/0",
+            "OPTIONS": {
+                "CLIENT_CLASS": "django_redis.client.DefaultClient",
+                "PICKLE_VERSION": -1
+            }
         }
     }
-}
-
+else:
+    CACHES = {
+        "default": {
+            "BACKEND": "django_redis.cache.RedisCache",
+            "LOCATION": "redis://127.0.0.1:6379/0",
+            "OPTIONS": {
+                "CLIENT_CLASS": "django_redis.client.DefaultClient",
+                "PICKLE_VERSION": -1
+            }
+        }
+    }
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
 

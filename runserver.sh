@@ -33,7 +33,7 @@ run_temp_server(){
 		# 像在终端一样使用这些shell 命令
         cd $project_dir
   	    # 检查安装依赖包
-		pip3 install -r requirements.txt
+#		pip3 install -r requirements.txt
 		# 数据库迁移
 		# python3 manage.py makemigrations
         # python3 manage.py migrate
