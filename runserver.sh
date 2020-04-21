@@ -35,8 +35,8 @@ run_temp_server(){
   	    # 检查安装依赖包
 #		pip3 install -r requirements.txt
 		# 数据库迁移
-		# python3 manage.py makemigrations
-        # python3 manage.py migrate
+		python3 manage.py makemigrations
+    python3 manage.py migrate
 		# 守护进程方式 启动celery
 		# python3 manage.py celery multi start w1 -A QAPlatform  --loglevel=info
 		# 启动项目 "&"表示后台运行
