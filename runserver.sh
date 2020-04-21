@@ -41,7 +41,8 @@ run_temp_server(){
 		# python3 manage.py celery multi start w1 -A QAPlatform  --loglevel=info
 #		python3 manage.py celery -B -A myCelery.main worker --loglevel=info
 		# 启动项目 "&"表示后台运行
-		python3 manage.py runserver 0.0.0.0:$runport &
+#		python3 manage.py runserver 0.0.0.0:$runport &
+    uwsgi  --ini  uwsgi.ini
 		echo "启动成功"
     fi
 }
