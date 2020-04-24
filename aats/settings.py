@@ -105,6 +105,9 @@ if ENV_PROFILE == "env":
         }
     }
     DEBUG = True
+    BROKERURL = 'redis://127.0.0.1:6379/15'
+    CELERYRESULTBACKEND = 'redis://127.0.0.1:6379/14'
+
 
 else:
     DATABASES = {
@@ -130,6 +133,8 @@ else:
         }
     }
     DEBUG = False
+    BROKERURL = 'redis://47.98.224.226:6379/15'
+    CELERYRESULTBACKEND = 'redis://47.98.224.226:6379/14'
 
 # # 连接mangodb
 # import mongoengine

@@ -72,8 +72,6 @@ def run_test(TaskNo, ids, projectid, address):
             c_fail += 1
             check = "失败"
 
-        # templates = """[ID]: {} \n[接口]: {}\n[校验方式]: {}\n[校验属性]: {}\n[校验结果]: {}""".format(i, address + obj['url'], obj['checkType'], obj['checkText'], check)
-
         with open('all.log', 'r') as f:
             tmp = f.read()
         print(tmp)

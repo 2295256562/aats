@@ -37,20 +37,20 @@ class httpservice:
                 check = '失败'
                 logger.info('校验失败')
 
-        # jsonpath 断言
+        # JSON 断言
         if checkType == 'json_response':
             want = {x['key']: x['value'] for x in checkText}
             key = list(want.keys())
             value = list(want.values())
-            # print(want)
-            # print(key)
-            # print(value)
+            print(want)
+            print(key)
+            print(value)
             for i, j in zip(key, value):
-                # print(i)
-                # print(resp)
+                print(i)
+                print(j)
+                print(resp)
                 reslut = self.JsonPath(resp, i)
-                # print(type(reslut))
-                # print(type(reslut[0]))
+                print(reslut,222233)
                 if isinstance(reslut[0], str):
                     res = " ".join(reslut)
                     print(res)
@@ -64,7 +64,9 @@ class httpservice:
                         return check
                 else:
                     tmp = (reslut[0])
-                    # print(type(eval(j)))
+                    print(tmp)
+                    print(type(eval(j)))
+                    print((eval(j)),1111111)
                     if tmp == eval(j):
                         logger.info('预期值:%s === 实际值%s' % (tmp, j))
                         check = '成功'

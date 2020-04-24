@@ -105,8 +105,7 @@ class HeadersFilterView(BaseViewSet):
     queryset = Headers.objects.all().order_by("-id")
     serializer_class = HeadersfilterSer
     pagination_class = CustomPagination
-    filter_fields = ('project', 'project_name')
-
+    search_fields = ('project_name',)
 
 class HeadersinfoView(BaseViewSet):
     queryset = Headers.objects.all()

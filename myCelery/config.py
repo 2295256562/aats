@@ -3,12 +3,15 @@ import logging
 import djcelery
 from celery.schedules import crontab
 
+from aats.settings import BROKERURL, CELERYRESULTBACKEND
+
 djcelery.setup_loader()
 #  任务队列的连接地址
-BROKER_URL = 'redis://47.98.224.226:6379/15'
+# BROKER_URL = 'redis://47.98.224.226:6379/15'
+BROKER_URL = BROKERURL
 
 # 结果队列的地址
-CELERY_RESULT_BACKEND = 'redis://47.98.224.226:6379/14'
+CELERY_RESULT_BACKEND = CELERYRESULTBACKEND
 
 # 结果序列化方案
 CELERY_RESULT_SERIALIZER = 'json'
