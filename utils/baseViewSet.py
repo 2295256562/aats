@@ -78,6 +78,8 @@ class BaseViewSet(ModelViewSet):
         delete /entity/{pk}/
         """
         instance = self.get_object()
+        print(instance.__dict__)
+        print(type(instance))
         self.perform_destroy(instance)
         return BaseResponse(message='数据删除成功.')
 

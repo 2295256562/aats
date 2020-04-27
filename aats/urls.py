@@ -26,7 +26,7 @@ from rest_framework_jwt.views import obtain_jwt_token
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    re_path("api_auth", include("rest_framework.urls")),
+    # re_path("api_auth", include("rest_framework.urls")),
 
     # 用户
     path('api/v1/login/', obtain_jwt_token),

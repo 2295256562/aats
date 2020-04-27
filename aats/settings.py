@@ -205,42 +205,42 @@ JWT_AUTH = {
     'JWT_RESPONSE_PAYLOAD_ERROR_HANDLER': 'utils.jwt_response.jwt_response_payload_error_handler',
 }
 
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'formatters': {  # 格式化
-        'simple': {
-            'format': '[%(asctime)s %(levelname)s] %(message)s',
-            'datefmt': '%Y-%m-%d %H:%M:%S'
-        },
-        'console': {
-            'format': '[%(asctime)s][%(levelname)s]  %(message)s',
-            'datefmt': '%Y-%m-%d %H:%M:%S'
-        }
-    },
-    'handlers': {  # 处理器
-        'console': {
-            'level': 'INFO',
-            'class': 'logging.StreamHandler',
-            'formatter': 'console'
-        },
-        'fileHandler': {
-            'level': 'INFO',
-            'class': 'logging.handlers.TimedRotatingFileHandler',
-            'formatter': 'simple',
-            'filename': 'art.log'
-        }
-
-    },
-    'loggers': {  # 记录器
-        'mdjango': {
-            'handlers': ['console', 'fileHandler'],
-            'level': 'INFO',
-            'propagate': False
-        }
-
-    }
-}
+# LOGGING = {
+#     'version': 1,
+#     'disable_existing_loggers': False,
+#     'formatters': {  # 格式化
+#         'simple': {
+#             'format': '[%(asctime)s %(levelname)s] %(message)s',
+#             'datefmt': '%Y-%m-%d %H:%M:%S'
+#         },
+#         'console': {
+#             'format': '[%(asctime)s][%(levelname)s]  %(message)s',
+#             'datefmt': '%Y-%m-%d %H:%M:%S'
+#         }
+#     },
+#     'handlers': {  # 处理器
+#         'console': {
+#             'level': 'INFO',
+#             'class': 'logging.StreamHandler',
+#             'formatter': 'console'
+#         },
+#         'fileHandler': {
+#             'level': 'INFO',
+#             'class': 'logging.handlers.TimedRotatingFileHandler',
+#             'formatter': 'simple',
+#             'filename': 'art.log'
+#         }
+#
+#     },
+#     'loggers': {  # 记录器
+#         'mdjango': {
+#             'handlers': ['console', 'fileHandler'],
+#             'level': 'INFO',
+#             'propagate': False
+#         }
+#
+#     }
+# }
 
 CELERY_ENABLE_UTC = False
 CELERY_TIMEZONE = TIME_ZONE

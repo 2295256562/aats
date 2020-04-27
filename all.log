@@ -1,5 +1,0 @@
-2020-04-03 17:20:00,450 - INFO: 用例ID:4
-2020-04-03 17:20:00,459 - INFO: 请求方式:2
-2020-04-03 17:20:00,460 - INFO: 请求url:http://127.0.0.1:8000/api/v1/login/
-2020-04-03 17:20:00,460 - INFO: 请求headers:{'Content-Type': 'application/json', 'Authorization': '${token}'}
-2020-04-03 17:20:00,461 - INFO: 请求参数:{'username': 'admin', 'password': 'admin123'}

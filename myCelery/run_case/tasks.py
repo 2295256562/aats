@@ -16,8 +16,6 @@ from utils.api.httpServer import httpservice
 from utils.log import Logger
 
 
-
-
 @app.task(name="run_test")
 def run_test(TaskNo, ids, projectid, address):
     data = []
@@ -46,7 +44,7 @@ def run_test(TaskNo, ids, projectid, address):
         # 执行测试用例
         # print(data)
         # 替换变量
-        logger = Logger('all.log', level='info')
+        logger = Logger('../all.log', level='info')
         logger.logger.info('用例ID:%d' % i)
         sheaders = str(headersdict)
         headersdict = httpservice.extract(sheaders, data)
@@ -96,15 +94,3 @@ def run_test(TaskNo, ids, projectid, address):
     report.R_Status = 3
     report.save()
     return "执行成功"
-
-
-@app.task(name="time_task")
-def Timetask(ids):
-    pass
-
-
-@app.task(name='add')
-def add(x, y):
-    c = x + y
-    print(1111, c)
-    return '1111'

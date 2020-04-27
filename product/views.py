@@ -4,6 +4,7 @@ from json import dumps
 
 from django.db.models import Count
 from django.http import HttpResponse
+from django.http.request import QueryDict
 from django.shortcuts import render
 
 # Create your views here.
@@ -50,6 +51,19 @@ class ProjectListView(BaseViewSet):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return BaseResponse(data=serializer.data)
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        project_id = instance.__dict__['id']
+        # 通过项目id查询是否有用例数据;如果有数据项目就不能删除,否则则可以
+        obj = ApiCase.objects.filter(project_id_id=project_id)
+        if obj:
+            data = {"code": "000002", "message": "失败", "data": "项目下有测试数据不能删除"}
+        else:
+            Headers.objects.update(is_deleted=1)
+            self.perform_destroy(instance)
+            data = {"code": "000000", "message": "成功", "data": "数据删除成功"}
+        return Response(data)
 
 
 class ProjectAddView(APIView):
@@ -107,6 +121,7 @@ class HeadersFilterView(BaseViewSet):
     pagination_class = CustomPagination
     search_fields = ('project_name',)
 
+
 class HeadersinfoView(BaseViewSet):
     queryset = Headers.objects.all()
     serializer_class = HeadersInfoSer
@@ -140,6 +155,20 @@ class AddModelView(BaseViewSet):
 class ListModel(BaseViewSet):
     queryset = Model.objects.all().order_by("-id")
     serializer_class = ListModelSer
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        model_id = instance.__dict__['project_id_id']
+        print(model_id)
+        # 通过项目id查询是否有用例数据;如果有数据项目就不能删除,否则则可以
+        obj = ApiCase.objects.filter(project_id_id=model_id)
+        if obj:
+            data = {"code": "000002", "message": "失败", "data": "项目下有测试数据不能删除"}
+        else:
+            Headers.objects.update(is_deleted=1)
+            self.perform_destroy(instance)
+            data = {"code": "000000", "message": "成功", "data": "数据删除成功"}
+        return Response(data)
 
 
 # 调试接口测试
