@@ -8,6 +8,7 @@ class Project(SoftDeletableModel):
     # 项目表
     project_name = models.CharField(max_length=64, verbose_name="项目名称")
     project_address = models.CharField(max_length=1024, verbose_name='项目地址')
+    document = models.CharField(max_length=1024, verbose_name='文档地址')
 
     class Meta:
         db_table = "project"
@@ -120,18 +121,16 @@ class APIcaseinfo(SoftDeletableModel):
         verbose_name_plural = verbose_name
 
 
-import mongoengine
+class API(SoftDeletableModel):
+    api = models.CharField(max_length=1024, verbose_name="api")
+    method = models.CharField(max_length=32, verbose_name="请求方式")
+    api_name = models.CharField(max_length=1024, verbose_name="接口名称")
+    tag = models.CharField(max_length=1024, verbose_name="接口标签")
+    params_type = models.CharField(max_length=32, verbose_name="参数类型")
+    parameters = models.TextField()
+    product = models.ForeignKey('Project', on_delete=models.CASCADE, verbose_name='所属项目')
 
-
-# class ApiLog(mongoengine.Document):
-#     log_caseID = mongoengine.IntField()
-#     log_reportID = mongoengine.StringField(max_length=256)
-#     log_caseUrl = mongoengine.StringField(max_length=1024)
-#     log_caseMethod = mongoengine.IntField()
-#     log_caseHeaders = mongoengine.StringField(max_length=2000)
-#     log_caseParams = mongoengine.StringField(max_length=3000)
-#     log_caseResponse = mongoengine.StringField(max_length=10000)
-#     log_caseCheckType = mongoengine.StringField(max_length=32)
-#     log_caseCheckText = mongoengine.StringField(max_length=2000)
-#     log_caseCheckExept = mongoengine.ListField()
-#     log_caseCheckResult = mongoengine.StringField(max_length=200)
+    class Meta:
+        db_table = "API"
+        verbose_name = "接口表"
+        verbose_name_plural = verbose_name

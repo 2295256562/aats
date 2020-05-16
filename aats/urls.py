@@ -21,7 +21,7 @@ from Users.views import RegUserView
 from aats import settings
 from product.views import ProjectListView, ProjectAddView, ProjectGetView, sourceListView, AddModelView, ListModel, \
     SendRequest, projectgetModel, addApicase, ListApiCase, GETCaseInfo, TestTask, HeadersView, HeadersinfoView, \
-    reportView, timeTask, TimeTaskList, listCase, HeadersFilterView, CaseReportInfo, statisticseveryday
+    reportView, timeTask, TimeTaskList, listCase, HeadersFilterView, CaseReportInfo, statisticseveryday, APilist
 from rest_framework_jwt.views import obtain_jwt_token
 
 urlpatterns = [
@@ -81,4 +81,7 @@ urlpatterns = [
     re_path('api/v1/addTimeTask/', timeTask.as_view()),
     re_path('api/v1/TimeTaskList/', TimeTaskList.as_view({'get': 'list'})),
     re_path('api/v1/TaskInfo/(?P<pk>\d+)', TimeTaskList.as_view({'get': 'retrieve'})),
+
+    # 订单列表
+    re_path('api/v1/apilist', APilist.as_view())
 ]

@@ -108,7 +108,6 @@ if ENV_PROFILE == "env":
     BROKERURL = 'redis://127.0.0.1:6379/15'
     CELERYRESULTBACKEND = 'redis://127.0.0.1:6379/14'
 
-
 else:
     DATABASES = {
         'default': {
@@ -254,7 +253,6 @@ CELERYBEAT_SCHEDULER = "djcelery.schedulers.DatabaseScheduler"
 # CELERY_RESULT_BACKEND = 'djcelery.backends.database:DatabaseBackend'
 # from djcelery.schedulers import DatabaseScheduler
 # CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler' # 定时任务调度器
-
 
 
 # 图片设置

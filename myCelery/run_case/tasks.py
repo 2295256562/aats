@@ -2,6 +2,8 @@ import ast
 import datetime
 import json
 import logging
+import os
+import re
 import time
 
 # from celery.utils.logger import get_task_loggerger
@@ -14,6 +16,7 @@ from utils.api.httpServer import httpservice
 # logger = get_task_loggerger(__name__)
 # logger = logging.getLogger('mdjango')
 from utils.log import Logger
+from requests import Session
 
 
 @app.task(name="run_test")
@@ -30,60 +33,59 @@ def run_test(TaskNo, ids, projectid, address):
     # print(headersdict)
     # print(type(headersdict))
 
+
     for i in ids:
-        report = Report.objects.get(R_Number=TaskNo)
-        report.R_Status = 2
-        report.save()
-        start_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        # 1. 通过id获取对应接口用例信息
-        obj = ApiCase.objects.values().get(pk=i)
-        params = json.loads(obj['params'])
-        if obj['type'] != 2:
+        try:
+            report = Report.objects.get(R_Number=TaskNo)
+            report.R_Status = 2
+            report.save()
+            start_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            # 1. 通过id获取对应接口用例信息
+            obj = ApiCase.objects.values().get(pk=i)
             params = json.loads(obj['params'])
-            params = {x['key']: x['value'] for x in params if x['initiate'] == True}
-        # 执行测试用例
-        # print(data)
-        # 替换变量
-        logger = Logger('../all.log', level='info')
-        logger.logger.info('用例ID:%d' % i)
-        sheaders = str(headersdict)
-        headersdict = httpservice.extract(sheaders, data)
-        logger.logger.info('请求方式:%s' % obj['method'])
-        logger.logger.info('请求url:%s' % address + obj['url'])
-        logger.logger.info('请求headers:%s' % headersdict)
-        logger.logger.info('请求参数:%s' % params)
+            print(params)
+            if obj['type'] != 2:
+                params = json.loads(obj['params'])
+                params = {x['key']: x['value'] for x in params if x['initiate'] == True}
+            # 执行测试用例
+            # print(data)
+            # 替换变量
+            sheaders = str(headersdict)
+            headersdict = httpservice.extract(sheaders, data)
 
-        resp = httpservice(obj['method'], address + obj['url'], obj['type'], params, ast.literal_eval(headersdict))
-        respnonse = resp.request()
-        if respnonse.status_code == 200:
-            logger.logger.info('响应结果:%s' % respnonse.json())
-            logger.logger.info('校验方式:%s' % obj['checkType'])
-            logger.logger.info('校验值%s:' % obj['checkText'])
-            check = resp.checkRequest(obj['checkType'], json.loads(obj['checkText']))
-            # case报告详情表中插入数据
-            if check == '成功':
-                c_pass += 1
+            resp = httpservice(obj['method'], address + obj['url'], obj['type'], params, ast.literal_eval(headersdict))
+            respnonse = resp.request()
+            if respnonse.status_code == 200:
+                # logger.logger.info('响应结果:%s' % respnonse.json())
+                # logger.logger.info('校验方式:%s' % obj['checkType'])
+                # logger.logger.info('校验值%s:' % obj['checkText'])
+                check = resp.checkRequest(obj['checkType'], json.loads(obj['checkText']))
+                # case报告详情表中插入数据
+                if check == '成功':
+                    c_pass += 1
+                else:
+                    c_fail += 1
             else:
+                # 状态码不等于200, 失败数加1
                 c_fail += 1
-        else:
-            # 状态码不等于200, 失败数加1
-            c_fail += 1
-            check = "失败"
+                check = "失败"
 
-        with open('all.log', 'r') as f:
-            tmp = f.read()
-        print(tmp)
-        # checkStauts = respnonse.status_code != 200 && check == '失败'
-        APIcaseinfo.objects.create(case_id=i, case_name=obj['case_name'], case_method=obj['method'],
-                                   case_url=address + obj['url'],
-                                   case_headers=headersdict,
-                                   case_params=params, case_response=respnonse.json(), case_expect=obj['checkText'],
-                                   case_stauts=check,
-                                   case_report=TaskNo, case_log=tmp)
+            content = """[ 请求信息 ]</br>URL: {}</br>Headers: {}</br>Body: {}</br>[ 响应信息 ]</br>Status: {}</br>Content: {}""".format(address + obj['url'], headersdict, respnonse.request.body, respnonse.status_code,
+                               respnonse.text.encode('utf-8'))
+            # print(content)
 
-        # 匹配到$符然后转换
-        data.clear()
-        data.append(respnonse.json())
+            APIcaseinfo.objects.create(case_id=i, case_name=obj['case_name'], case_method=obj['method'],
+                                       case_url=address + obj['url'],
+                                       case_headers=headersdict,
+                                       case_params=params, case_response=respnonse.json(), case_expect=obj['checkText'],
+                                       case_stauts=check,
+                                       case_report=TaskNo, case_log=content)
+
+            # 匹配到$符然后转换
+            data.clear()
+            data.append(respnonse.json())
+        except:
+            continue
 
     end_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     report = Report.objects.get(R_Number=TaskNo)
@@ -93,4 +95,49 @@ def run_test(TaskNo, ids, projectid, address):
     report.R_EndTime = end_time
     report.R_Status = 3
     report.save()
+    return "执行成功"
+
+
+@app.task(name="getAPi")
+def getApi(swagger_url, project_name, productid):
+    """
+    根据swagger返回的json数据自动生成yml测试用例模板
+    :param swagger_url:
+    :param project_name:
+    :return:
+    """
+    res = Session().request('get', swagger_url).json()
+    # 获取解决地址
+    data = res.get('paths')
+    # 获取接口参数
+    definitions = res.get('definitions')
+
+    for k, v in data.items():
+        pa_res = re.split(r'[/]+', k)
+        dir, *file = pa_res[1:]
+
+        if len(v) > 1:
+            v = {'post': v.get('post')}
+        for _k, _v in v.items():
+            try:
+                method = _k
+                api = k
+                caseName = _v.get('summary')
+                data_or_params = 'params' if method == 'get' else 'data'
+                parameters = _v.get('parameters')
+                if parameters[0]['schema']:
+                    schema = parameters[0]['schema']
+                    address = schema['$ref']
+                    ccc = address.split('/')
+                    ddd = definitions[ccc[-1]]
+                    parameters = ddd['properties']
+                else:
+                    parameters = _v.get('parameters')
+                tag = _v.get('tags')
+            except:
+                continue
+        # print(api, method, caseName, tag, data_or_params, json.dumps(parameters))
+        API.objects.create(api=api, method=method, api_name=caseName, tag=tag, params_type=data_or_params,
+                           parameters=json.dumps(parameters), product_id=productid)
+
     return "执行成功"

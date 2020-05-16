@@ -15,7 +15,7 @@ CELERY_RESULT_BACKEND = CELERYRESULTBACKEND
 
 # 结果序列化方案
 CELERY_RESULT_SERIALIZER = 'json'
-
+# CELERY_ACCEPT_CONTENT = ['json', 'msgpack'] # 指定接受的内容类型
 CELERYD_MAX_TASKS_PER_CHILD = 100  # 每个worker最大执行数，长时间执行造成内存泄露/
 CELERYBEAT_SCHEDULER = "djcelery.schedulers.DatabaseScheduler"
 CELERYD_HIJACK_ROOT_LOGGER = False  # 拦截根日志配置

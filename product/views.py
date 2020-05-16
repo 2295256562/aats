@@ -3,23 +3,14 @@ import logging
 from json import dumps
 
 from django.db.models import Count
-from django.http import HttpResponse
-from django.http.request import QueryDict
-from django.shortcuts import render
-
-# Create your views here.
-from django.utils.datetime_safe import strftime
-from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import filters
-from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from myCelery.run_case.tasks import run_test
+from myCelery.run_case.tasks import run_test, getApi
 from Users.custompage import CustomPagination
-from product.models import Project, Model, ApiCase, Headers, Report, APIcaseinfo
+from product.models import Project, Model, ApiCase, Headers, Report, APIcaseinfo, API
 from product.serializer import ListProjectSerializer, AddProjectSerializer, SoureceProjectSer, AddModelSer, \
     ListModelSer, modelSerializer, addAPicaseSer, listApiCase, GETinfoSer, HeadersSer, HeadersInfoSer, reportinfoSer, \
-    timeTaskSer, HeadersfilterSer, caseReportInfoSer, statisticseverydaySer
+    timeTaskSer, HeadersfilterSer, caseReportInfoSer
 from utils.api.httpServer import httpservice
 from utils.baseViewSet import BaseViewSet
 from utils.baseresponse import BaseResponse
@@ -78,11 +69,15 @@ class ProjectAddView(APIView):
         project_address = dumps(user_data['project_address'], ensure_ascii=False)
         data = {
             'project_name': user_data['project_name'],
-            'project_address': project_address
+            'project_address': project_address,
+            'document': user_data['document']
         }
         ser = AddProjectSerializer(data=data, context={'request': request})
         ser.is_valid(raise_exception=True)
         ser.save()
+
+        # 获取swagger文档
+        getApi.delay(user_data['document'], user_data['project_name'], ser.data['id'])
         # 获取项目名称写入headers表
         # data['project_name']
         print(ser.data)
@@ -379,9 +374,17 @@ class statisticseveryday(APIView):
 
     def get(self, request):
         # 最近新增case
-        RECENTLYADDCASE = ApiCase.objects.extra(
-            select={"create_time": "DATE_FORMAT(create_time, '%%Y-%%m-%%d')"}).values(
-            "create_time").annotate(count=Count("id")).order_by()[:30]
+        from django.db import connection
+
+        cursor = connection.cursor()
+
+        cursor.execute("select b.days,IFNULL(c.c,0) from (SELECT @cdate := date_add(@cdate,interval -1 day) days from (SELECT @cdate := CURDATE() from API limit 30) t1 ) b left join  (select  count(1) as c  ,date from  (SELECT DATE_FORMAT(  u.create_time , '%Y-%m-%d' ) AS date  FROM API AS u WHERE( u.create_time + INTERVAL 30 Day)  > now()) a group by a.date ) c on b.days =c.date ORDER BY b.days")
+        RECENTLYADDCASE = cursor.fetchall()
+        list = []
+        for row in RECENTLYADDCASE:
+
+            dic = {"count": row[1], "create_time": row[0]}
+            list.append(dic)
 
         # 用例总数
         CASESUM = ApiCase.objects.count()
@@ -393,10 +396,25 @@ class statisticseveryday(APIView):
         TimerTask = PeriodicTask.objects.count()
 
         obj = {
-            "RECENTLYADDCASE": RECENTLYADDCASE,
+            "RECENTLYADDCASE": list,
             "CASESUM": CASESUM,
             "PROJECTSUM": PROJECTSUM,
             "TimerTask": TimerTask
         }
 
         return Response({"code": "000000", "message": "成功", "data": obj})
+
+
+class APilist(APIView):
+
+    def get(self, request):
+        ca_num = API.objects.values('tag').all().distinct()
+        list = []
+        for i in ca_num:
+            dict = {}
+            da = API.objects.values().filter(tag=i['tag'])
+            dict['label'] = da
+            ll = {}
+            ll[i['tag']] = da
+            list.append(ll)
+        return Response({"code": "000000", "message": "成功", "data":list})

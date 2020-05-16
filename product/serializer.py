@@ -185,14 +185,16 @@ class caseReportInfoSer(serializers.ModelSerializer):
         data = super().to_representation(instance)
         # cc = json.dumps(data['case_headers'])
         # data['case_headers'] = json.loads(data['case_headers'])
-        print(type(data['case_headers']))
-        print(data['case_headers'])
-        print(type(eval(data['case_headers'])))
+        print(data)
+        # print(type(data['case_headers']))
+        # print(data['case_headers'])
+        # print(type(eval(data['case_headers'])))
         data['case_headers'] = eval(data['case_headers'])
         data['case_params'] = eval(data['case_params'])
         data['case_response'] = eval(data['case_response'])
         data['case_log'] = data['case_log'].replace('\n', '\n').replace('\r', '')
-        print(data['case_log'])
+        data['case_expect'] = data['case_expect'].split("'")
+        print(data['case_expect'][0])
         return data
 
 
@@ -232,4 +234,9 @@ class statisticseverydaySer(serializers.ModelSerializer):
 
     class Meta:
         model = ApiCase
+        fields = '__all__'
+
+class APiSerliazer(serializers.ModelSerializer):
+    class Meta:
+        model = API
         fields = '__all__'

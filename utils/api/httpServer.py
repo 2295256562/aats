@@ -28,53 +28,56 @@ class httpservice:
         check = ''
 
         # 响应断言
-        if checkType == 'text_response':
-            logger.info('预期值:%s ==== 实际值%s' % (json.loads(checkText, resp)))
-            if json.loads(checkText) == resp:
-                check = '成功'
-                logger.info('校验通过')
-            else:
-                check = '失败'
-                logger.info('校验失败')
-
-        # JSON 断言
-        if checkType == 'json_response':
-            want = {x['key']: x['value'] for x in checkText}
-            key = list(want.keys())
-            value = list(want.values())
-            print(want)
-            print(key)
-            print(value)
-            for i, j in zip(key, value):
-                print(i)
-                print(j)
-                print(resp)
-                reslut = self.JsonPath(resp, i)
-                print(reslut,222233)
-                if isinstance(reslut[0], str):
-                    res = " ".join(reslut)
-                    print(res)
-                    if res == j:
-                        logger.info('预期值:%s === 实际值%s' % (res, j))
-                        check = '成功'
-                        logger.info('校验通过')
-                    else:
-                        check = '失败'
-                        logger.info('校验失败')
-                        return check
+        try:
+            if checkType == 'text_response':
+                logger.info('预期值:%s ==== 实际值%s' % (json.loads(checkText, resp)))
+                if json.loads(checkText) == resp:
+                    check = '成功'
+                    logger.info('校验通过')
                 else:
-                    tmp = (reslut[0])
-                    print(tmp)
-                    print(type(eval(j)))
-                    print((eval(j)),1111111)
-                    if tmp == eval(j):
-                        logger.info('预期值:%s === 实际值%s' % (tmp, j))
-                        check = '成功'
-                        logger.info('校验通过')
+                    check = '失败'
+                    logger.info('校验失败')
+
+            # JSON 断言
+            if checkType == 'json_response':
+                want = {x['key']: x['value'] for x in checkText}
+                key = list(want.keys())
+                value = list(want.values())
+                print(want)
+                print(key)
+                print(value)
+                for i, j in zip(key, value):
+                    print(i)
+                    print(j)
+                    print(resp)
+                    reslut = self.JsonPath(resp, i)
+                    print(reslut,222233)
+                    if isinstance(reslut[0], str):
+                        res = " ".join(reslut)
+                        print(res)
+                        if res == j:
+                            logger.info('预期值:%s === 实际值%s' % (res, j))
+                            check = '成功'
+                            logger.info('校验通过')
+                        else:
+                            check = '失败'
+                            logger.info('校验失败')
+                            return check
                     else:
-                        check = '失败'
-                        logger.info('校验失败')
-                        # return check
+                        tmp = (reslut[0])
+                        print(tmp)
+                        print(type(eval(j)))
+                        print((eval(j)),1111111)
+                        if tmp == eval(j):
+                            logger.info('预期值:%s === 实际值%s' % (tmp, j))
+                            check = '成功'
+                            logger.info('校验通过')
+                        else:
+                            check = '失败'
+                            logger.info('校验失败')
+                            # return check
+        except:
+            check = "失败"
         return check
 
     def request(self):

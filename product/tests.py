@@ -7,7 +7,7 @@ import datetime
 from django.db.models import Count
 
 from aats.settings import BASE_DIR
-from product.models import ApiCase
+from product.models import ApiCase, API
 
 from django.test import TestCase
 import json
@@ -52,12 +52,9 @@ import json
 # print(s_replace)
 
 
-
-
 import os
 from git.repo import Repo
 from git.repo.fun import is_git_dir
-
 
 # class GitRepository(object):
 #     """
@@ -144,25 +141,52 @@ from git.repo.fun import is_git_dir
 #         """
 #         self.repo.git.checkout(tag)
 
-import requests,json,sqlite3,uuid
+# import requests,json,sqlite3,uuid
+#
+# headers = {
+#     'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36',
+# }
+# #gitlab地址
+# git_url='https://github.com/2295256562'
+# #gitlab的token
+# git_token='d96f58168bafd41d56bccecf3c02d9bee11a1494'
+#
+# session = requests.Session()
+# headers['PRIVATE-TOKEN']=git_token
+# session.headers = headers
+# git_login=session.get(git_url,headers=headers)
+#
+#
+# import gitlab
+# client = gitlab.Gitlab("https://github.com/2295256562", private_token='51164531276d36c30642ca547112df70b022297b', timeout=8000)
+# client.auth()
+# project = client.projects.get('python')
+# commits = project.commits.list(ref_name='master', page=0, per_page=20)
+# print(commits)
+# print(API.objects.values('tag'))
 
-headers = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36',
-}
-#gitlab地址
-git_url='https://github.com/2295256562'
-#gitlab的token
-git_token='d96f58168bafd41d56bccecf3c02d9bee11a1494'
 
-session = requests.Session()
-headers['PRIVATE-TOKEN']=git_token
-session.headers = headers
-git_login=session.get(git_url,headers=headers)
+# 当前日期格式
+cur_date = datetime.datetime.now()
+# 前一天日期
+yester_day = cur_date - datetime.timedelta(days=30)
+# 前一周日期
+week = cur_date - datetime.timedelta(weeks=1)
+print(cur_date)
+print(yester_day)
 
+# 查询前一周数据,也可以用range,我用的是glt,lte大于等于
+from django.db import connection
 
-import gitlab
-client = gitlab.Gitlab("https://github.com/2295256562", private_token='51164531276d36c30642ca547112df70b022297b', timeout=8000)
-client.auth()
-project = client.projects.get('python')
-commits = project.commits.list(ref_name='master', page=0, per_page=20)
-print(commits)
+from django.db import connection
+
+cursor = connection.cursor()
+
+cursor.execute( "select count(1) ,date from  (SELECT DATE_FORMAT(  u.create_time , '%Y-%m-%d' ) AS date FROM API AS u WHERE( u.create_time + INTERVAL 30 Day)  > now()) a group by a.date")
+print(type(cursor.fetchall()))
+print(list(cursor.fetchall()))
+rows = cursor.fetchall()
+
+for  row in rows :
+    student = {"StudentNum": row[1], "StudentLastName": row[2],}
+    print(student)
