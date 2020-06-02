@@ -47,8 +47,8 @@ class HeadersSer(serializers.ModelSerializer):
     def to_representation(self, instance):
         data = super().to_representation(instance)
         headers = json.loads(data['headers'])
-        data['headers'] = {x['headerSetKey']: x['headersSetValue'] for x in headers}
-        data['headers'] = str(data['headers'])
+        # data['headers'] = {x['headerSetKey']: x['headersSetValue'] for x in headers}
+        # data['headers'] = str(data['headers'])
         # 返回处理之后的数据
         return data
 
@@ -126,7 +126,7 @@ class addAPicaseSer(serializers.ModelSerializer):
     )
 
     class Meta:
-        model = ApiCase
+        model = Case
         fields = '__all__'
 
 
@@ -136,7 +136,7 @@ class listApiCase(serializers.ModelSerializer):
     project_name = serializers.CharField(source='project_id.project_name')
 
     class Meta:
-        model = ApiCase
+        model = Case
         fields = '__all__'
 
     def to_representation(self, instance):
@@ -152,7 +152,7 @@ class GETinfoSer(serializers.ModelSerializer):
     project_name = serializers.CharField(source='project_id.project_name')
 
     class Meta:
-        model = ApiCase
+        model = Case
         fields = '__all__'
 
     def to_representation(self, instance):
@@ -178,7 +178,7 @@ class reportinfoSer(serializers.ModelSerializer):
 
 class caseReportInfoSer(serializers.ModelSerializer):
     class Meta:
-        model = APIcaseinfo
+        model = CaseReport
         fields = '__all__'
 
     def to_representation(self, instance):
@@ -233,10 +233,23 @@ class statisticseverydaySer(serializers.ModelSerializer):
     )
 
     class Meta:
-        model = ApiCase
+        model = Case
         fields = '__all__'
 
+
 class APiSerliazer(serializers.ModelSerializer):
+    class Meta:
+        model = API
+        fields = '__all__'
+
+
+class AddapiSerliazer(serializers.ModelSerializer):
+    create_user = serializers.HiddenField(
+        default=serializers.CurrentUserDefault()
+    )
+    create_time = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", required=False, read_only=True)
+    project_name = serializers.CharField(source='project.project_name', read_only=True)
+
     class Meta:
         model = API
         fields = '__all__'

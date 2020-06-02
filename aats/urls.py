@@ -21,7 +21,8 @@ from Users.views import RegUserView
 from aats import settings
 from product.views import ProjectListView, ProjectAddView, ProjectGetView, sourceListView, AddModelView, ListModel, \
     SendRequest, projectgetModel, addApicase, ListApiCase, GETCaseInfo, TestTask, HeadersView, HeadersinfoView, \
-    reportView, timeTask, TimeTaskList, listCase, HeadersFilterView, CaseReportInfo, statisticseveryday, APilist
+    reportView, timeTask, TimeTaskList, listCase, HeadersFilterView, CaseReportInfo, statisticseveryday, APilist, \
+    Addapi, ListAPI
 from rest_framework_jwt.views import obtain_jwt_token
 
 urlpatterns = [
@@ -49,6 +50,10 @@ urlpatterns = [
     re_path('api/v1/modelInfo/(?P<pk>\d+)/', ListModel.as_view({'get': 'retrieve'})),
     re_path('api/v1/updateMod/(?P<pk>\d+)/', ListModel.as_view({'put': 'update'})),
 
+
+    # 添加接口
+    re_path('api/v1/add_api', Addapi.as_view({'post': 'create'})),
+    re_path('api/v1/list_api', Addapi.as_view({'get': 'list'})),
     # 接口调试
     re_path('api/v1/send', SendRequest.as_view()),
     # 通过项目id查询所有模块
@@ -82,6 +87,10 @@ urlpatterns = [
     re_path('api/v1/TimeTaskList/', TimeTaskList.as_view({'get': 'list'})),
     re_path('api/v1/TaskInfo/(?P<pk>\d+)', TimeTaskList.as_view({'get': 'retrieve'})),
 
-    # 订单列表
-    re_path('api/v1/apilist', APilist.as_view())
+    # api列表
+    # re_path('api/v1/apilist', APilist.as_view()),
+    # re_path('api/v1/apilist', Addapi.as_view({'get': 'list'})),
+    re_path('api/v1/apilist', ListAPI.as_view()),
+
+    # re_path('api/v1/api', api.as_view())
 ]

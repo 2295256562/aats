@@ -82,58 +82,58 @@ AUTH_USER_MODEL = 'Users.User'
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 ENV_PROFILE = os.getenv("ENV")
 
-if ENV_PROFILE == "env":
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'NAME': 'TT',
-            'USER': 'root',
-            'PASSWORD': '123456',
-            'HOST': '127.0.0.1',
-            # 数据库的端口号
-            'PORT': '3306'
-        },
-    }
-    CACHES = {
-        "default": {
-            "BACKEND": "django_redis.cache.RedisCache",
-            "LOCATION": "redis://127.0.0.1:6379/0",
-            "OPTIONS": {
-                "CLIENT_CLASS": "django_redis.client.DefaultClient",
-                "PICKLE_VERSION": -1
-            }
+# if ENV_PROFILE == "env":
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'apitest',
+        'USER': 'root',
+        'PASSWORD': '123456',
+        'HOST': '127.0.0.1',
+        # 数据库的端口号
+        'PORT': '3306'
+    },
+}
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/0",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            "PICKLE_VERSION": -1
         }
     }
-    DEBUG = True
-    BROKERURL = 'redis://127.0.0.1:6379/15'
-    CELERYRESULTBACKEND = 'redis://127.0.0.1:6379/14'
+}
+DEBUG = True
+BROKERURL = 'redis://127.0.0.1:6379/15'
+CELERYRESULTBACKEND = 'redis://127.0.0.1:6379/14'
 
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'NAME': 'TT',
-            'USER': 'root',
-            'PASSWORD': 'yuan@KXM1023',
-            'HOST': '47.98.224.226',
-            # 数据库的端口号
-            'PORT': '3306'
-        },
-    }
-
-    CACHES = {
-        "default": {
-            "BACKEND": "django_redis.cache.RedisCache",
-            "LOCATION": "redis://47.98.224.226/0",
-            "OPTIONS": {
-                "CLIENT_CLASS": "django_redis.client.DefaultClient",
-                "PICKLE_VERSION": -1
-            }
-        }
-    }
-    DEBUG = False
-    BROKERURL = 'redis://47.98.224.226:6379/15'
-    CELERYRESULTBACKEND = 'redis://47.98.224.226:6379/14'
+# else:
+#     DATABASES = {
+#         'default': {
+#             'ENGINE': 'django.db.backends.mysql',
+#             'NAME': 'TT',
+#             'USER': 'root',
+#             'PASSWORD': 'yuan@KXM1023',
+#             'HOST': '47.98.224.226',
+#             # 数据库的端口号
+#             'PORT': '3306'
+#         },
+#     }
+#
+#     CACHES = {
+#         "default": {
+#             "BACKEND": "django_redis.cache.RedisCache",
+#             "LOCATION": "redis://47.98.224.226/0",
+#             "OPTIONS": {
+#                 "CLIENT_CLASS": "django_redis.client.DefaultClient",
+#                 "PICKLE_VERSION": -1
+#             }
+#         }
+#     }
+#     DEBUG = False
+#     BROKERURL = 'redis://47.98.224.226:6379/15'
+#     CELERYRESULTBACKEND = 'redis://47.98.224.226:6379/14'
 
 # # 连接mangodb
 # import mongoengine
@@ -190,10 +190,10 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 10,  # 每页数目
     'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
 
-    # 异常返回
-    'EXCEPTION_HANDLER': (
-        'utils.custom_exception.custom_exception_handler'
-    )
+    # # 异常返回
+    # 'EXCEPTION_HANDLER': (
+    #     'utils.custom_exception.custom_exception_handler'
+    # )
 }
 
 import datetime

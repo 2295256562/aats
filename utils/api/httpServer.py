@@ -1,3 +1,4 @@
+import copy
 import json
 import logging
 import re
@@ -7,6 +8,8 @@ import requests
 from celery.utils.log import get_task_logger
 
 # log = get_task_logger(__name__)
+from testify import assert_equal
+
 logger = logging.getLogger('mdjango')
 
 class httpservice:
@@ -80,27 +83,90 @@ class httpservice:
             check = "失败"
         return check
 
+    def validate(self, expected_value):
+        """
+        校验返回值字段
+        :param key:
+        :param expected_value:
+        :return: 返回校验记录 list, 返回用例结果True or false
+        """
+
+        # cc = [{"check": "$.msg", "comparator": "=", "expect": "success"},
+        #       {"check": "code", "comparator": "=", "expect": 1},
+        #       {"check": "status_code", "comparator": "=", "expect": 200}]
+        result = []
+        stauts = True
+        template = {
+            "check_result": "pass",
+            "check_value": "",
+            "check_type": "",
+            "expect": "",
+            "result": ""
+        }
+        # 拿到response
+        resp = self.request().json()
+
+        for i, el in enumerate(expected_value):
+            if el['check'] == "status_code":
+                assert_equal(self.request().status_code, el['expect'])
+                template = copy.deepcopy(template)
+                template['check_result'] = "pass"
+                template['check_value'] = el['check']
+                template['check_type'] = el['comparator']
+                template['expect'] = el['expect']
+                template['result'] = self.request().status_code
+                result.append(template)
+            else:
+                temp = jsonpath.jsonpath(resp, el['check'])[0]
+
+                if el['comparator'] == "=":
+                    try:
+                        assert_equal(temp, el["expect"])
+                        template = copy.deepcopy(template)
+                        template['check_value'] = el['check']
+                        template['check_type'] = el['comparator']
+                        template['expect'] = el['expect']
+                        template['result'] = temp
+                        result.append(template)
+                    except  AssertionError as ex:
+                        template = copy.deepcopy(template)
+                        template['check_result'] = "fail"
+                        template['check_value'] = el['check']
+                        template['check_type'] = el['comparator']
+                        template['expect'] = el['expect']
+                        template['result'] = temp
+                        result.append(template)
+                        # dict = {f"校验参数:{el['check']} , 校验方式:{el['comparator']} ,实际结果:{temp} ,预期结果:{el['expect']}, 校验结果:{status}"}
+                        # result.append(dict)
+        for i, va in enumerate(result):
+            if va["check_result"] == "fail":
+                stauts = False
+
+        return result, stauts
+
     def request(self):
         global resp
 
         if self.method == '1':
             if self.type == 1:
                 # print(self.url)
-                # print(self.parameters)
-                # print(self.headers)
+                print(self.parameters)
+                print(self.headers,22222)
                 resp = requests.get(url=self.url, params=self.parameters, headers=self.headers, verify=False)
+                print(resp)
 
         if self.method == '2':
             if self.type == 1:
                 headers = self.headers.update({'Content-Type': 'application/x-www-form-urlencoded'})
                 print(self.headers)
                 resp = requests.post(url=self.url, data=self.parameters, headers=self.headers)
+                print(resp)
 
             if self.type == 2:
                 # print(json.loads(self.parameters))
                 # print(type(self.parameters))
-                resp = requests.post(url=self.url, json=self.parameters, headers=self.headers)
-                # print(resp)
+                resp = requests.post(url=self.url, json=(self.parameters), headers=self.headers)
+                print(resp)
 
             if self.type == 3:
                 headers = self.headers.update({'Content-Type': 'multipart/form-data'})
@@ -179,8 +245,8 @@ dict = [{'flag': True, 'msg': 'success', 'code': 0, 'data': {
     'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjo0ODc4NzU4LCJleHAiOjE1ODU3OTk2MzQsImlhdCI6MTU4NTE5NDgzNH0.TR_R-WK_gxjVz1VUDgVYrFaVrPqKEeSlgCeZZm7zi7s',
     'uid': 4878758}}]
 
-if __name__ == '__main__':
-    cc = {'Content-Type': 'application/json', 'api-version': 'v1.2.0', 'request-source': 'web',
-          'authorization': '${data.token}'}
-
-    print(httpservice.extract(str(cc), dict))
+# if __name__ == '__main__':
+#     cc = {'Content-Type': 'application/json', 'api-version': 'v1.2.0', 'request-source': 'web',
+#           'authorization': '${data.token}'}
+#
+#     print(httpservice.extract(str(cc), dict))

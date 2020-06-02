@@ -7,10 +7,10 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from myCelery.run_case.tasks import run_test, getApi
 from Users.custompage import CustomPagination
-from product.models import Project, Model, ApiCase, Headers, Report, APIcaseinfo, API
+from product.models import Project, Model, Headers, Report, API, Case, CaseReport
 from product.serializer import ListProjectSerializer, AddProjectSerializer, SoureceProjectSer, AddModelSer, \
     ListModelSer, modelSerializer, addAPicaseSer, listApiCase, GETinfoSer, HeadersSer, HeadersInfoSer, reportinfoSer, \
-    timeTaskSer, HeadersfilterSer, caseReportInfoSer
+    timeTaskSer, HeadersfilterSer, caseReportInfoSer, AddapiSerliazer
 from utils.api.httpServer import httpservice
 from utils.baseViewSet import BaseViewSet
 from utils.baseresponse import BaseResponse
@@ -46,8 +46,9 @@ class ProjectListView(BaseViewSet):
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         project_id = instance.__dict__['id']
+        # print(project_id)
         # 通过项目id查询是否有用例数据;如果有数据项目就不能删除,否则则可以
-        obj = ApiCase.objects.filter(project_id_id=project_id)
+        obj = API.objects.filter(project_id=project_id)
         if obj:
             data = {"code": "000002", "message": "失败", "data": "项目下有测试数据不能删除"}
         else:
@@ -77,11 +78,12 @@ class ProjectAddView(APIView):
         ser.save()
 
         # 获取swagger文档
-        getApi.delay(user_data['document'], user_data['project_name'], ser.data['id'])
+        if user_data['document'] != "":
+            getApi.delay(user_data['document'], user_data['project_name'], ser.data['id'])
         # 获取项目名称写入headers表
         # data['project_name']
-        print(ser.data)
-        headers = [{"headerSetKey": "Content-Type", "headersSetValue": "application/json", "headersStatus": True}]
+        # print(ser.data)
+        headers = {"Content-Type": "application/json"}
 
         h_data = {
             'project_name': data['project_name'],
@@ -106,8 +108,6 @@ class HeadersView(BaseViewSet):
     queryset = Headers.objects.all().order_by("-id")
     serializer_class = HeadersSer
     pagination_class = CustomPagination
-    # filter_fields = ('project', 'project_name')
-    # search_fields = ('project_id', 'project_name')
 
 
 class HeadersFilterView(BaseViewSet):
@@ -153,10 +153,10 @@ class ListModel(BaseViewSet):
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
-        model_id = instance.__dict__['project_id_id']
+        model_id = instance.__dict__['project_id']
         print(model_id)
         # 通过项目id查询是否有用例数据;如果有数据项目就不能删除,否则则可以
-        obj = ApiCase.objects.filter(project_id_id=model_id)
+        obj = API.objects.filter(project_id=model_id)
         if obj:
             data = {"code": "000002", "message": "失败", "data": "项目下有测试数据不能删除"}
         else:
@@ -222,11 +222,11 @@ class addApicase(APIView):
 
 
 class ListApiCase(BaseViewSet):
-    queryset = ApiCase.objects.all().order_by("-id")
+    queryset = Case.objects.all().order_by("-id")
     serializer_class = listApiCase
     # filter_backends = (filters.SearchFilter,)
     search_fields = ('case_name',)
-    filter_fields = ('project_id', 'id', 'url', 'case_name')
+    # filter_fields = ('project_id', 'id', 'url', 'case_name')
 
 
 class listCase(APIView):
@@ -234,14 +234,14 @@ class listCase(APIView):
     def get(self, request):
         user_data = request.GET.getlist('id')
         print(user_data)
-        data = ApiCase.objects.filter(pk__in=user_data)
+        data = Case.objects.filter(pk__in=user_data)
         print(data)
         ser = listApiCase(data, many=True)
         return Response({"code": "000000", "message": "成功", "data": ser.data})
 
 
 class GETCaseInfo(BaseViewSet):
-    queryset = ApiCase.objects.all()
+    queryset = Case.objects.all()
     serializer_class = GETinfoSer
 
     def update(self, request, *args, **kwargs):
@@ -265,7 +265,7 @@ class reportView(BaseViewSet):
 
 
 class CaseReportInfo(BaseViewSet):
-    queryset = APIcaseinfo.objects.all()
+    queryset = CaseReport.objects.all()
     serializer_class = caseReportInfoSer
     filter_fields = ('case_report',)
 
@@ -370,24 +370,26 @@ class TimeTaskList(BaseViewSet):
     pagination_class = CustomPagination
 
 
+from django.db import connection
+
+
 class statisticseveryday(APIView):
 
     def get(self, request):
         # 最近新增case
-        from django.db import connection
 
         cursor = connection.cursor()
 
-        cursor.execute("select b.days,IFNULL(c.c,0) from (SELECT @cdate := date_add(@cdate,interval -1 day) days from (SELECT @cdate := CURDATE() from API limit 30) t1 ) b left join  (select  count(1) as c  ,date from  (SELECT DATE_FORMAT(  u.create_time , '%Y-%m-%d' ) AS date  FROM API AS u WHERE( u.create_time + INTERVAL 30 Day)  > now()) a group by a.date ) c on b.days =c.date ORDER BY b.days")
+        cursor.execute(
+            "select b.days,IFNULL(c.c,0) from (SELECT @cdate := date_add(@cdate,interval -1 day) days from (SELECT @cdate := CURDATE() from Case limit 30) t1 ) b left join  (select  count(1) as c  ,date from  (SELECT DATE_FORMAT(  u.create_time , '%Y-%m-%d' ) AS date  FROM api AS u WHERE( u.create_time + INTERVAL 30 Day)  > now()) a group by a.date ) c on b.days =c.date ORDER BY b.days")
         RECENTLYADDCASE = cursor.fetchall()
         list = []
         for row in RECENTLYADDCASE:
-
             dic = {"count": row[1], "create_time": row[0]}
             list.append(dic)
 
         # 用例总数
-        CASESUM = ApiCase.objects.count()
+        CASESUM = Case.objects.count()
 
         # 项目总数
         PROJECTSUM = Project.objects.count()
@@ -408,13 +410,50 @@ class statisticseveryday(APIView):
 class APilist(APIView):
 
     def get(self, request):
-        ca_num = API.objects.values('tag').all().distinct()
-        list = []
-        for i in ca_num:
-            dict = {}
-            da = API.objects.values().filter(tag=i['tag'])
-            dict['label'] = da
-            ll = {}
-            ll[i['tag']] = da
-            list.append(ll)
-        return Response({"code": "000000", "message": "成功", "data":list})
+        project = API.objects.all()
+        return Response({"code": "000000", "message": "成功", "data": project})
+
+
+class Addapi(BaseViewSet):
+    queryset = API.objects.all()
+    serializer_class = AddapiSerliazer
+    pagination_class = CustomPagination
+
+    def get(self, request):
+        project = API.objects.values('project_id').all().distinct()
+        print(project)
+
+
+class ListAPI(APIView):
+    def get(self, request):
+        project = API.objects.values('project_id').all().distinct()
+        # print(project)
+        datalist = []
+        for i in project:
+            # print(i['project_id'])
+            # 拿到外键的名称
+            projectName = Project.objects.get(pk=i['project_id'])
+            print(projectName.__str__())
+
+            projectlist = []
+            datalist.append({projectName.__str__(): projectlist})
+            # 拼数据定义一个list
+            tag = API.objects.values('tag').filter(project_id=i['project_id']).distinct()
+            # print(tag)
+            # project.append(tag)
+            for t in tag:
+                # print(t['tag'])
+                # projectlist.append(t['tag'])
+                # 通过tag去查tag下的数据
+                api = API.objects.values('api_name', 'method', 'api').filter(tag=t['tag'], project_id=i['project_id'])
+                # print(api)
+                projectlist.append({t['tag']: api})
+
+        print(datalist)
+        print(projectlist)
+        return Response({"code": "000000", "message": "成功", "data": datalist})
+# class api(APIView):
+#     def get(self,request):
+#
+#         run.delay()
+#         return Response({"code": "000000", "message": "成功", "data": "任务创建成功"})

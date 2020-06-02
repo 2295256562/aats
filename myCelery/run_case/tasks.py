@@ -5,6 +5,7 @@ import logging
 import os
 import re
 import time
+import unittest
 
 # from celery.utils.logger import get_task_loggerger
 
@@ -13,15 +14,12 @@ from myCelery.main import app
 from product.models import *
 from utils.api.httpServer import httpservice
 
-# logger = get_task_loggerger(__name__)
-# logger = logging.getLogger('mdjango')
-from utils.log import Logger
 from requests import Session
 
 
 @app.task(name="run_test")
 def run_test(TaskNo, ids, projectid, address):
-    data = []
+    data = []   # 存储函数变量
     c_pass = 0
     c_fail = 0
     start_time = ''
@@ -32,7 +30,7 @@ def run_test(TaskNo, ids, projectid, address):
     headersdict = {x['headerSetKey']: x['headersSetValue'] for x in head if x['headersStatus'] == True}
     # print(headersdict)
     # print(type(headersdict))
-
+    print(ids)
 
     for i in ids:
         try:
@@ -41,7 +39,7 @@ def run_test(TaskNo, ids, projectid, address):
             report.save()
             start_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             # 1. 通过id获取对应接口用例信息
-            obj = ApiCase.objects.values().get(pk=i)
+            obj = Case.objects.values().get(pk=i)
             params = json.loads(obj['params'])
             print(params)
             if obj['type'] != 2:
@@ -52,9 +50,11 @@ def run_test(TaskNo, ids, projectid, address):
             # 替换变量
             sheaders = str(headersdict)
             headersdict = httpservice.extract(sheaders, data)
-
+            # print(headersdict)
+            # print(params)
             resp = httpservice(obj['method'], address + obj['url'], obj['type'], params, ast.literal_eval(headersdict))
             respnonse = resp.request()
+            print(respnonse.json())
             if respnonse.status_code == 200:
                 # logger.logger.info('响应结果:%s' % respnonse.json())
                 # logger.logger.info('校验方式:%s' % obj['checkType'])
@@ -74,7 +74,7 @@ def run_test(TaskNo, ids, projectid, address):
                                respnonse.text.encode('utf-8'))
             # print(content)
 
-            APIcaseinfo.objects.create(case_id=i, case_name=obj['case_name'], case_method=obj['method'],
+            CaseReport.objects.create(case_id=i, case_name=obj['case_name'], case_method=obj['method'],
                                        case_url=address + obj['url'],
                                        case_headers=headersdict,
                                        case_params=params, case_response=respnonse.json(), case_expect=obj['checkText'],
@@ -101,7 +101,7 @@ def run_test(TaskNo, ids, projectid, address):
 @app.task(name="getAPi")
 def getApi(swagger_url, project_name, productid):
     """
-    根据swagger返回的json数据自动生成yml测试用例模板
+    根据swagger返回的json数据插入数据库
     :param swagger_url:
     :param project_name:
     :return:
@@ -141,3 +141,8 @@ def getApi(swagger_url, project_name, productid):
                            parameters=json.dumps(parameters), product_id=productid)
 
     return "执行成功"
+
+
+@app.task(name="run_case")
+def run_case():
+    pass

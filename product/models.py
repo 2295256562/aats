@@ -4,11 +4,13 @@ from utils.Model_obj import SoftDeletableModel
 from django.db import models
 
 
-class Project(SoftDeletableModel):
+class Project(models.Model):
     # 项目表
     project_name = models.CharField(max_length=64, verbose_name="项目名称")
     project_address = models.CharField(max_length=1024, verbose_name='项目地址')
-    document = models.CharField(max_length=1024, verbose_name='文档地址')
+    document = models.CharField(max_length=1024, verbose_name='文档地址', null=True, blank=True)
+    create_user = models.CharField(max_length=32, verbose_name='创建人')
+    create_time = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
 
     class Meta:
         db_table = "project"
@@ -24,8 +26,6 @@ class Model(SoftDeletableModel):
     model_name = models.CharField(max_length=64, verbose_name='模块名称')
     project_id = models.ForeignKey("Project", on_delete=models.CASCADE, verbose_name='项目id')
 
-    # model_desc = models.CharField(max_length=1024, verbose_name='模块描述')
-
     class Meta:
         db_table = "model"
         verbose_name = "模块表"
@@ -35,22 +35,33 @@ class Model(SoftDeletableModel):
         return self.model_name
 
 
-class ApiCase(SoftDeletableModel):
-    # 接口自动化用例表
+class API(SoftDeletableModel):
+    api_name = models.CharField(max_length=1024, verbose_name="接口名称")
+    api = models.CharField(max_length=1024, verbose_name="api")
+    method = models.CharField(max_length=32, verbose_name="请求方式")
+    tag = models.CharField(max_length=1024, verbose_name="接口标签")
+    params_type = models.CharField(max_length=32, verbose_name="参数类型")
+    parameters = models.TextField(verbose_name="接口参数")
+    project = models.ForeignKey('Project', on_delete=models.CASCADE, verbose_name='所属项目')
+
+    class Meta:
+        db_table = "api"
+        verbose_name = "接口表"
+        verbose_name_plural = verbose_name
+
+
+class Case(SoftDeletableModel):
+    # 用例表
     case_name = models.CharField(max_length=128, verbose_name="用例名称")
-    project_id = models.ForeignKey("Project", on_delete=models.CASCADE, verbose_name="所属项目id")
-    model = models.CharField(max_length=64, verbose_name="所属模块")
-    method = models.CharField(max_length=2, verbose_name="请求方式")
-    url = models.CharField(max_length=1024, verbose_name="接口地址")
-    type = models.IntegerField(verbose_name="参数类型")
-    params = models.TextField(verbose_name="请求参数")
-    checkType = models.CharField(max_length=32, verbose_name="校验类型")
-    checkText = models.TextField(verbose_name="校验值")
+    case_params = models.TextField(verbose_name="用例请求参数")
+    case_check = models.TextField(verbose_name="断言")
+    case_extract = models.TextField(verbose_name="提取变量")
+    case_api = models.ForeignKey('API', on_delete=models.CASCADE, verbose_name="接口")
     update_time = models.DateTimeField(auto_now=True, verbose_name="更新时间")
 
     class Meta:
-        db_table = "apicase"
-        verbose_name = "接口用例表"
+        db_table = "case"
+        verbose_name = "用例表"
         verbose_name_plural = verbose_name
 
 
@@ -97,12 +108,7 @@ class Report(SoftDeletableModel):
         verbose_name_plural = verbose_name
 
 
-class ApiILog(SoftDeletableModel):
-    caseId = models.IntegerField(verbose_name='用例id')
-    caseUrl = models.TextField(verbose_name='接口url')
-
-
-class APIcaseinfo(SoftDeletableModel):
+class CaseReport(SoftDeletableModel):
     case_id = models.IntegerField(verbose_name="用例id")
     case_name = models.CharField(max_length=1024, verbose_name="用例名称")
     case_method = models.CharField(verbose_name="请求方式", max_length=32)
@@ -116,21 +122,6 @@ class APIcaseinfo(SoftDeletableModel):
     case_log = models.TextField()
 
     class Meta:
-        db_table = "case_reportInfo"
+        db_table = "report_info"
         verbose_name = "用例报告详情"
-        verbose_name_plural = verbose_name
-
-
-class API(SoftDeletableModel):
-    api = models.CharField(max_length=1024, verbose_name="api")
-    method = models.CharField(max_length=32, verbose_name="请求方式")
-    api_name = models.CharField(max_length=1024, verbose_name="接口名称")
-    tag = models.CharField(max_length=1024, verbose_name="接口标签")
-    params_type = models.CharField(max_length=32, verbose_name="参数类型")
-    parameters = models.TextField()
-    product = models.ForeignKey('Project', on_delete=models.CASCADE, verbose_name='所属项目')
-
-    class Meta:
-        db_table = "API"
-        verbose_name = "接口表"
         verbose_name_plural = verbose_name
